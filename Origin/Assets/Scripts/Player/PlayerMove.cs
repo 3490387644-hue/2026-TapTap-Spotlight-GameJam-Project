@@ -20,7 +20,7 @@ public class PlayerMove : MonoBehaviour
     private void Update()
     {
         move=Input.GetAxis("Horizontal")*moveSpeed;
-        jump = Input.GetKey(KeyCode.Space);
+        jump = Input.GetKey(KeyCode.W);
     }
 
     private void FixedUpdate()
