@@ -14,6 +14,10 @@ public abstract class BasePanel : MonoBehaviour
     private bool isShow = false;
     //当自己淡出成功时 要执行的委托函数
     private UnityAction hideCallBack;
+    // 决定面板关闭时是直接销毁还是失活隐藏 true表示销毁 false表示失活隐藏
+    public bool isDestroy = false;
+    // 防止重复点击 想着先留着 后续可能会使用
+    public bool isClicked = false;
 
     protected virtual void  Awake()
     {
