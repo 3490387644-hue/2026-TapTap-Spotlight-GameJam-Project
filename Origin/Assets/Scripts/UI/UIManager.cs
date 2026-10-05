@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UIManager
 {
@@ -15,8 +16,7 @@ public class UIManager
     private UIManager()
     {
         //得到场景中的Canvas对象
-        //canvasTrans=GameObject.Find("Canvas").transform;
-        GameObject canvas = GameObject.Instantiate(Resources.Load<GameObject>("UI/Canvas"));
+        GameObject canvas = GameObject.Instantiate(ResMgr.Instance.Load<GameObject>("UI/Canvas"));
         canvasTrans = canvas.transform;
         //过场景不删除Canvas对象
         GameObject.DontDestroyOnLoad(canvasTrans.gameObject);
@@ -46,33 +46,96 @@ public class UIManager
         return panel;
     }
 
+    // 异步显示面板
+    public void ShowPanelAsync<T>(UnityAction<T> callback = null) where T : BasePanel
+    {
+        string panelName = typeof(T).Name;
+        if (panelDic.ContainsKey(panelName))
+        {
+            T panel = panelDic[panelName] as T;
+            if(panel.gameObject.activeSelf == false)
+            {
+                panel.gameObject.SetActive(true);
+                panel.ShowMe();
+            }
+            callback?.Invoke(panel);
+            return;
+        }
+        
+        ResMgr.Instance.LoadAsync<GameObject>(PathUtil.PanelPath + panelName, (obj)=>
+        {
+            GameObject panelObj = GameObject.Instantiate(obj);
+            panelObj.transform.SetParent(canvasTrans, false);
+            T panel = panelObj.GetComponent<T>();
+            panelDic.Add(panelName, panel);
+            panel.ShowMe();
+            callback?.Invoke(panel);
+        });
+    }
+
+#region 改动的部分
     //隐藏面板
     //参数一：希望淡出默认为true,希望删掉则传false
-    public void HidePanel<T>(bool isFade=true)where T : BasePanel
+    // public void HidePanel<T>(bool isFade = true) where T : BasePanel
+    // {
+    //     //根据 泛型类型 得到面板名字
+    //     string panelName = typeof(T).Name;
+    //     //判断当前显示的面板 有没有该名字的面板
+    //     if (panelDic.ContainsKey(panelName))
+    //     {
+    //         if (isFade)
+    //         {
+    //             panelDic[panelName].HideMe(() =>
+    //             {
+    //                 //面板淡出成功后 删除面板
+    //                 GameObject.Destroy(panelDic[panelName].gameObject);
+    //                 //删除面板后 从字典中移除
+    //                 panelDic.Remove(panelName);
+    //             });
+    //         }
+    //         else
+    //         {
+    //             //直接删除面板
+    //             GameObject.Destroy(panelDic[panelName].gameObject);
+    //             //删除面板后 从字典中移除
+    //             panelDic.Remove(panelName);
+    //         }
+    //     }
+    // }
+#endregion
+
+    //隐藏面板 先判断是否需要真正删除 避免不必要的GC
+    public void HidePanel<T>(bool isFade = true ,UnityAction<T> callback = null) where T : BasePanel
     {
-        //根据 泛型类型 得到面板名字
-        string panelName= typeof(T).Name;
-        //判断当前显示的面板 有没有该名字的面板
-        if(panelDic.ContainsKey(panelName))
+        string panelName = typeof(T).Name;
+        T panel = panelDic[panelName] as T;
+        if (panelDic.ContainsKey(panelName))
         {
-            if(isFade)
+            if (isFade)
             {
-                panelDic[panelName].HideMe(()=>
+                panelDic[panelName].HideMe(() =>
                 {
-                    //面板淡出成功后 删除面板
-                    GameObject.Destroy(panelDic[panelName].gameObject);
-                    //删除面板后 从字典中移除
-                    panelDic.Remove(panelName);
+                    if (panel.isDestroy)
+                    {
+                        GameObject.Destroy(panelDic[panelName].gameObject);
+                        panelDic.Remove(panelName);
+                    }
+                    else
+                        panelDic[panelName].gameObject.SetActive(false);
                 });
+                return;
             }
-            else
+            if (panel.isDestroy)
             {
-                //直接删除面板
                 GameObject.Destroy(panelDic[panelName].gameObject);
-                //删除面板后 从字典中移除
                 panelDic.Remove(panelName);
             }
+            else
+                panelDic[panelName].gameObject.SetActive(false);
+
         }
+        callback?.Invoke(panel);
+        Time.timeScale = 1f; // 恢复游戏时间缩放
     }
 
     //获得面板
