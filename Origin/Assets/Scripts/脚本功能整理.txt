@@ -1,0 +1,226 @@
+================================================================================
+                      TapTap Game Jam 项目脚本框架树
+================================================================================
+
+以下按目录结构以树状图展示 Assets/Scripts 下所有脚本及其功能。
+（已排除 .meta 元数据文件）
+
+注：括号内标注继承/实现方式，便于快速理解框架结构。
+
+
+Scripts
+│
+├─ Main.cs
+│     └─ 游戏入口脚本（SingletonAutoMono 单例）
+│          · Awake：DontDestroyOnLoad 常驻；加载光标贴图；初始化 GameDataMgr；
+│            将 hasSaveData 置为 true（临时写死，默认有存档）
+│          · Start：设置自定义光标；异步显示主菜单面板 MainPanel
+│          · Update：监听 Esc 键，按下异步显示 GamePanel
+│
+├─ BKWatch\
+│     └─ Parallax.cs
+│            └─ 视差滚动背景（MonoBehaviour）
+│                 · 根据主摄像机水平位移按 parallaxSpeed 比例移动自身，实现远景/近景视差
+│
+├─ Checkpoint\
+│     ├─ Checkpoint.cs
+│     │     └─ 检查点触发器（MonoBehaviour）
+│     │          · Player 进入时调用 CheckpointMgr 记录当前检查点
+│     │
+│     └─ CheckpointMgr.cs
+│           └─ 检查点管理器（BaseManager 单例）
+│                · PushCheckPoint：记录最新检查点
+│                · GetCheckPoint：返回最新检查点（用于复活）
+│
+├─ Data\
+│     └─ GameData.cs
+│           └─ 游戏存档数据模型（纯数据类，用于 JSON 序列化）
+│                · GameData：hasSaveData / playerPos / musicVolume / soundVolume
+│                · PositionData：玩家三维坐标 _x/_y/_z
+│
+├─ Manager\
+│     ├─ GameDataMgr.cs
+│     │     └─ 游戏存档管理器（BaseManager 单例）
+│     │          · Init：加载存档
+│     │          · SaveGameData：保存位置/音量到 JSON（JsonUtlity）
+│     │          · LoadGameData：从 JSON 读取存档
+│     │
+│     └─ GameSceneManager.cs
+│           └─ 游戏场景管理器（MonoBehaviour）
+│                · 目前为空壳（Start/Update 无逻辑），预留扩展
+│
+├─ Framework\
+│     ├─ Singleton\
+│     │     ├─ BaseManager.cs
+│     │     │     └─ 非 MonoBehaviour 通用单例基类（双重锁线程安全懒加载）
+│     │     │
+│     │     ├─ SingletonAutoMono.cs
+│     │     │     └─ 自动创建式 MonoBehaviour 单例基类（推荐使用，跨场景常驻）
+│     │     │
+│     │     └─ SingletonMono.cs
+│     │           └─ 手动挂载式 MonoBehaviour 单例基类（Awake 初始化，重复则销毁）
+│     │
+│     ├─ Res\
+│     │     └─ ResMgr.cs
+│     │           └─ Resources 资源加载管理器（BaseManager 单例）
+│     │                · Load<T>：同步加载
+│     │                · LoadAsync<T> / LoadAsync(path,type)：异步加载
+│     │                · UnloadAsset：卸载指定资源
+│     │                · UnloadUnusedAssets：异步卸载未使用资源
+│     │
+│     ├─ AB\
+│     │     ├─ ABMgr.cs
+│     │     │     └─ AssetBundle 加载管理器（SingletonAutoMono 单例）
+│     │     │          · 按平台(IOS/Android/PC)加载主包与依赖清单
+│     │     │          · 字典缓存已加载 AB，避免重复加载
+│     │     │          · LoadMainAB / LoadAB：加载主包与依赖
+│     │     │          · LoadResAsync：异步加载（Object/Type/泛型 三种重载，isSync 可同步）
+│     │     │          · UnLoad：卸载指定 AB；ClearAB：卸载全部并清缓存
+│     │     │
+│     │     └─ ABResMgr.cs
+│     │           └─ AB 加载对外统一入口（BaseManager 单例）
+│     │                · 编辑器下走 EditorResMgr，打包后走 ABMgr
+│     │
+│     ├─ EditorRes\
+│     │     └─ EditorResMgr.cs
+│     │           └─ 仅编辑器环境资源加载（BaseManager 单例）
+│     │                · LoadEditorRes<T>：AssetDatabase 按路径加载，自动拼后缀(prefab/png/mat/MP3)
+│     │                · LoadSprite：加载图集中单个 Sprite
+│     │                · LoadSprites：加载图集返回 name->Sprite 字典
+│     │                · 注意：依赖 UnityEditor，打包后不可用
+│     │
+│     ├─ EventCenter\
+│     │     ├─ E_EventType.cs
+│     │     │     └─ 事件类型枚举（目前为空，预留扩展）
+│     │     │
+│     │     └─ EventCenter.cs
+│     │           └─ 事件中心模块（BaseManager 单例，观察者模式）
+│     │                · EventInfoBase / EventInfo<T> / EventInfo：事件包装（有参/无参）
+│     │                · EventTrigger：触发事件
+│     │                · AddEventListener / RemoveEventListener：增删监听
+│     │                · Clear：清空全部/指定事件监听
+│     │
+│     ├─ Mono\
+│     │     └─ MonoMgr.cs
+│     │           └─ 生命周期事件转发器（SingletonAutoMono 单例）
+│     │                · 将 Update/FixedUpdate/LateUpdate 以委托形式暴露给非 MonoBehaviour 类
+│     │                · 提供 Add/Remove Update、FixedUpdate、LateUpdate Listener
+│     │
+│     ├─ Music\
+│     │     └─ MusicMgr.cs
+│     │           └─ 背景音乐与音效管理器（BaseManager 单例）
+│     │                · PlayBKMusic / StopBKMusic / PauseBKMusic：背景音乐播放/停止/暂停
+│     │                · ChangeBKMusicValue：调整背景音乐音量
+│     │                · PlaySound：播放音效（对象池取 AudioSource，支持循环/同步/回调）
+│     │                · StopSound：停止并回收指定音效
+│     │                · ChangeSoundValue：调整音效音量
+│     │                · PlayOrPauseSound：整体播放/暂停音效
+│     │                · ClearSound：清空所有音效并回收
+│     │                · 通过 MonoMgr 注册 FixedUpdate 自动回收播放完毕的音效
+│     │
+│     ├─ Pool\
+│     │     └─ PoolMgr.cs
+│     │           └─ 对象池管理器（BaseManager 单例）
+│     │                · PoolData：池容器（Stack 存空闲、List 记录使用中）
+│     │                · GetObj：取对象（无空闲时从 Resources 实例化，可设最大数量）
+│     │                · PushObj：回收对象
+│     │                · ClearPool：清空对象池
+│     │                · isOpenLayout：是否开启层级整理
+│     │
+│     └─ UWQ\
+│           └─ UWQResMgr.cs
+│                 └─ 网络资源加载管理器（SingletonAutoMono 单例）
+│                      · LoadRes<T>：UnityWebRequest 加载远程资源
+│                        (string/byte[]/Texture/AssetBundle)，支持 http/ftp/file
+│
+├─ Json\
+│     ├─ JsonMgr.cs
+│     │     └─ JSON 读写管理器（私有构造单例）
+│     │          · JsonType 枚举：JsonUtlity / LitJson
+│     │          · SaveData：序列化写入 persistentDataPath
+│     │          · LoadData：从 streamingAssetsPath/persistentDataPath 读取反序列化
+│     │
+│     └─ LitJson\  （第三方 JSON 开源库，整体说明）
+│           ├─ JsonMapper.cs        — 核心：对象与 JSON 互转(ToJson/ToObject)
+│           ├─ JsonData.cs          — 通用 JSON 数据容器(对象/数组/基本类型)
+│           ├─ JsonReader.cs        — JSON 读取器
+│           ├─ JsonWriter.cs        — JSON 写入器
+│           ├─ Lexer.cs             — 词法分析器(拆分 token)
+│           ├─ ParserToken.cs       — 解析 token 枚举
+│           ├─ IJsonWrapper.cs      — JSON 包装接口
+│           ├─ JsonMockWrapper.cs   — 模拟包装类(占位)
+│           ├─ JsonException.cs     — JSON 异常定义
+│           └─ Netstandard15Polyfill.cs — netstandard1.5 兼容补充
+│
+├─ Magma\
+│     └─ MagmaTrigger.cs
+│           └─ 危险区域触发器（MonoBehaviour，岩浆等）
+│                · Player 进入时将位置重置到最新检查点（掉入岩浆复活）
+│
+├─ Player\
+│     ├─ CharacterController2D.cs
+│     │     └─ 2D 角色控制器（Rigidbody2D 刚体驱动）
+│     │          · OverlapCircleAll + groundMask 检测地面
+│     │          · OnLandEvent / OnAirEvent 落地/离地事件
+│     │          · Move：水平移动、朝向翻转、跳跃
+│     │          · 跳跃延迟判定(m_NextGroundCheckLag)防连跳
+│     │
+│     └─ PlayerMove.cs
+│           └─ 玩家输入与控制（MonoBehaviour）
+│                · Update：读取水平轴(Horizontal)与跳跃键(W)
+│                · FixedUpdate：传入 CharacterController2D.Move 执行移动
+│
+├─ UI\
+│     ├─ UIManager.cs
+│     │     └─ UI 管理器（私有构造单例）
+│     │          · 构造时实例化 Canvas 作面板父节点并 DontDestroyOnLoad
+│     │          · ShowPanel / ShowPanelAsync：同步/异步显示面板并缓存
+│     │          · HidePanel：隐藏面板(淡出，isDestroy 决定销毁或仅隐藏)
+│     │          · GetPanel：获取已显示面板实例
+│     │
+│     ├─ BasePanel.cs
+│     │     └─ 所有面板抽象基类
+│     │          · CanvasGroup 实现淡入/淡出过渡
+│     │          · 抽象方法 Init（子类初始化）
+│     │          · ShowMe / HideMe：显示/隐藏
+│     │          · isDestroy(是否销毁) / isClicked(防重复点击)
+│     │
+│     ├─ BaseButton.cs
+│     │     └─ 通用按钮悬停动画（IPointerEnterHandler/IPointerExitHandler）
+│     │          · 指针移入/移出时对位置和缩放做 SmoothStep 平滑过渡
+│     │
+│     └─ Panel\
+│           ├─ MainPanel.cs
+│           │     └─ 主菜单面板
+│           │          · 遍历子物体 Button 统一添加 BaseButton 悬停动画
+│           │          · 根据是否有存档动态调整按钮布局(继续↔开始、合并关于/新游戏)
+│           │          · 按钮回调：设置/退出/新游戏/关于/继续/开始(部分预留)
+│           │
+│           ├─ SettingPanel.cs
+│           │     └─ 设置面板
+│           │          · 音乐/音效音量增减按钮(0~10)并更新文本
+│           │          · 分辨率下拉框(2560*1440/1920*1080/1600*900)，
+│           │            切换时 Screen.SetResolution
+│           │          · 返回按钮回主菜单
+│           │
+│           ├─ GamePanel.cs
+│           │     └─ 游戏内暂停/菜单面板
+│           │          · 继续：隐藏本面板；设置：打开设置面板；返回：回主菜单
+│           │
+│           ├─ ClearPanel.cs
+│           │     └─ "新游戏"确认面板
+│           │          · 是/否按钮：确认(逻辑预留) / 返回主菜单
+│           │
+│           └─ AboutPanel.cs
+│                 └─ 关于面板
+│                      · 返回按钮回主菜单(isDestroy=true，隐藏时销毁)
+│
+└─ Utils\
+      └─ PathUtil.cs
+            └─ 路径常量工具类
+                 · PanelPath = "UI/Panel/"（面板资源加载路径）
+
+
+================================================================================
+                         —— 完 ——
+================================================================================
