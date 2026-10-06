@@ -16,7 +16,7 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(this.transform.position.x<=185.5)
+        if(this.transform.position.x<=185.5&& this.transform.position.x>= -29.45)
         {
             float xChange = player.position.x - lastPlayerPosition;
             this.transform.position += new Vector3(xChange, 0, 0);

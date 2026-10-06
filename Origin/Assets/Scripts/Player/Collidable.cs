@@ -30,12 +30,28 @@ public class Collidable : MonoBehaviour
                     {
                         Vector3 p = colliders[i].transform.position;
                         quaternion r = colliders[i].transform.rotation;
-                        Destroy(colliders[i].gameObject);
-                        if(colliders[i].gameObject.GetComponent<RockNum>().isBornAlgae)
-                        Instantiate(ResMgr.Instance.Load<GameObject>("Text/green algae"), p, r);
+                        colliders[i].gameObject.GetComponent<Animator>().SetTrigger("isCollidable"); //播放石头碎裂动画
+                        Destroy(colliders[i].gameObject,1.5f);
+                        if (colliders[i].gameObject.GetComponent<RockNum>().isBornAlgae)
+                            StartCoroutine(myCoroutine(colliders[i].gameObject));
                     }
                 }
             }
         }
+    }
+
+    IEnumerator myCoroutine(GameObject obj)
+    {
+        yield return new WaitForSeconds(1.3f);
+        AlgaeBorn.Instance.AlgaeCreate(obj);
+    }
+
+    // Gizmos绘制范围
+    void OnDrawGizmosSelected()
+    {
+        //设置 gizmos颜色，这里绿色
+        Gizmos.color = Color.green;
+        // 线框球体：中心是玩家位置，半径 detectRadius
+        Gizmos.DrawWireSphere(transform.position, 0.7f);
     }
 }
