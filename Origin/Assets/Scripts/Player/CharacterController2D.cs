@@ -19,6 +19,9 @@ public class CharacterController2D : MonoBehaviour
     // 这个角色控制器，是依靠刚体驱动的
     private Rigidbody2D m_Rigidbody2D;
 
+    //玩家对象上的动画状态机
+    private Animator animator;
+
     [Header("Events")]
     [Space]
 
@@ -31,6 +34,7 @@ public class CharacterController2D : MonoBehaviour
     private void Awake()
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
@@ -86,6 +90,16 @@ public class CharacterController2D : MonoBehaviour
             {
                 Flip();
             }
+
+            //播放移动动画
+            if(Mathf.Abs(move)>0)
+            {
+                animator.SetBool("isMove",true);
+            }
+            else
+            {
+                animator.SetBool("isMove", false);
+            }
         }
 
         // 在地面时按下跳跃键，就会跳跃
@@ -95,6 +109,7 @@ public class CharacterController2D : MonoBehaviour
             m_Grounded = false;
             // 施加弹跳力
             m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+            animator.SetTrigger("isJump");
             m_NextGroundCheckTime = Time.time + m_NextGroundCheckLag;
         }
     }
