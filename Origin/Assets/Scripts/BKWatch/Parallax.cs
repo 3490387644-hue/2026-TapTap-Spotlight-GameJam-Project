@@ -17,7 +17,7 @@ public class Parallax : MonoBehaviour
         _lastPosition=_mainCamera.position;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         ParallaxMove();
     }

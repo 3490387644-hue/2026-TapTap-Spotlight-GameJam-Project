@@ -9,12 +9,16 @@ public class PlayerMove : MonoBehaviour
 
     private CharacterController2D characterController;
 
+    //玩家的动画状态机
+    private Animator animator;
+
     private float move;
     private bool jump;
     // Start is called before the first frame update
     void Start()
     {
         characterController=GetComponent<CharacterController2D>();
+        animator=GetComponent<Animator>();
     }
 
     private void Update()
