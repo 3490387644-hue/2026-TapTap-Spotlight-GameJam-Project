@@ -13,16 +13,23 @@ public class GamePanel : BasePanel
         //初始化面板的逻辑
         continueButton.onClick.AddListener(()=>
         {
+            Debug.Log("继续游戏");
             UIManager.Instance.HidePanel<GamePanel>();
         });
 
         settingButton.onClick.AddListener(()=>
         {
-            UIManager.Instance.ShowPanelAsync<SettingPanel>();
+            Debug.Log("设置");
+            UIManager.Instance.ShowPanelAsync<SettingPanel>((panel)=>
+            {
+                panel.SetSource(E_SettingSource.GamePanel);
+            });
+            UIManager.Instance.HidePanel<GamePanel>();
         });
 
         backButton.onClick.AddListener(()=>
         {
+            Debug.Log("返回主菜单");
             UIManager.Instance.HidePanel<GamePanel>();
             UIManager.Instance.ShowPanelAsync<MainPanel>();
         });

@@ -12,8 +12,15 @@ public class ClearPanel : BasePanel
         //初始化面板的逻辑
         yesButton.onClick.AddListener(()=>
         {
-            // 播放开场动画
+            // // 播放开场动画
             
+            // 测试脚本
+            UIManager.Instance.ShowPanelAsync<LoadingPanel>((panel)=>
+            {
+                panel.InitProgress("GameScene");
+            });
+            UIManager.Instance.HidePanel<ClearPanel>();
+            UIManager.Instance.HidePanel<MainPanel>();
         });
 
         noButton.onClick.AddListener(()=>

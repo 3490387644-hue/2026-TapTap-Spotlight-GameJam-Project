@@ -69,19 +69,27 @@ public class MainPanel : BasePanel
     {
         Debug.Log("开始游戏");
         // 待写：单击选项会有清脆敲击声
-
+        
     }
 
     private void OnClickContinueButton()
     {
         Debug.Log("继续游戏");
+        // UIManager.Instance.HidePanel<MainPanel>(true, (panel)=>
+        // {
+        //     DialogManager.Instance.Init();
+        //     DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type1);
+        // });
     }
 
     private void OnClickSettingButton()
     {
         Debug.Log("设置");
         // 点击按钮 打开设置面板
-        UIManager.Instance.ShowPanelAsync<SettingPanel>();
+        UIManager.Instance.ShowPanelAsync<SettingPanel>((panel)=>
+        {
+            panel.SetSource(E_SettingSource.MainPanel);
+        });
         UIManager.Instance.HidePanel<MainPanel>();
     }
 

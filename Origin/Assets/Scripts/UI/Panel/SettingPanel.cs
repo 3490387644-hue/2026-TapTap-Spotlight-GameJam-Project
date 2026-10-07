@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum E_SettingSource
+{
+    MainPanel,
+    GamePanel
+}
+
 public class SettingPanel : BasePanel
 {
     public Text musicVolumeText;
@@ -15,6 +21,7 @@ public class SettingPanel : BasePanel
     public Dropdown resolutionDropdown;
     private int musicVolume;
     private int soundVolume;
+    private E_SettingSource source;
     private readonly Vector2Int[] resolutions =
     {
         new Vector2Int(2560, 1440),
@@ -31,8 +38,19 @@ public class SettingPanel : BasePanel
 
         backButton.onClick.AddListener(()=>
         {
-            UIManager.Instance.ShowPanelAsync<MainPanel>();
             UIManager.Instance.HidePanel<SettingPanel>();
+            switch(source)
+            {
+                case E_SettingSource.MainPanel:
+                    UIManager.Instance.ShowPanelAsync<MainPanel>();
+                    break;
+                case E_SettingSource.GamePanel:
+                    UIManager.Instance.ShowPanelAsync<GamePanel>();
+                    break;
+                default:
+                    Debug.LogWarning("找不到设置面板的来源");
+                    break;
+            }
         });
 
         // 设置按钮的点击事件
@@ -134,5 +152,10 @@ public class SettingPanel : BasePanel
             resolution.x,
             resolution.y,
             Screen.fullScreenMode);
+    }
+
+    public void SetSource(E_SettingSource source)
+    {
+        this.source = source;
     }
 }

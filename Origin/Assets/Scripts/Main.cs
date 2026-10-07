@@ -14,6 +14,11 @@ public class Main : SingletonAutoMono<Main>
         DontDestroyOnLoad(this.gameObject);
         cursorTex = ResMgr.Instance.Load<Texture2D>("ArtRes/CursorIcon");
         GameDataMgr.Instance.Init();
+        Debug.Log(GameDataMgr.Instance.dialogData.Count);
+        for(int i = 0; i < GameDataMgr.Instance.dialogData.Count; i++)
+        {
+            Debug.Log($"Dialog ID: {GameDataMgr.Instance.dialogData[i].ID}, Text: {GameDataMgr.Instance.dialogData[i].Text}, Type: {GameDataMgr.Instance.dialogData[i].Type}");
+        }
         GameDataMgr.Instance.gameData.hasSaveData = true; // 测试用，默认有存档数据
     }
 

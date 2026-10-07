@@ -69,7 +69,9 @@ public abstract class BasePanel : MonoBehaviour
             {
                 canvasGroup.alpha = 0;
                 //应该让管理器 删除自己
-                hideCallBack?.Invoke();
+                UnityAction callback = hideCallBack;
+                hideCallBack = null;
+                callback?.Invoke();
             }
         }
     }
