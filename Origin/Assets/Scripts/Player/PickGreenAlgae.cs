@@ -18,9 +18,17 @@ public class PickGreenAlgae : MonoBehaviour
     private void Update()
     {
         //当吸收绿藻数量达到五个时，玩家变大
-        if(algaeNum>=5)
+        if(algaeNum==5)
         {
-            this.transform.localScale = Vector3.one*0.35f;
+            if(CharacterController2D.Instance.m_FacingRight)
+            {
+                this.transform.localScale = new Vector3(0.35f, 0.35f, 1);
+            }
+            else
+            {
+                this.transform.localScale = new Vector3(-0.35f,0.35f,1);
+            }
+            CharacterController2D.Instance.jumpForce = 500;
         }
     }
 
