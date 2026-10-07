@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
+    private static CharacterController2D instance;
+    public static CharacterController2D Instance=>instance;
     public float jumpForce = 400f;                          // 弹跳力
     public bool canAirControl = false;                      // 在空中时，是否能控制
     public LayerMask groundMask;                            // 定义哪一个Layer是地面
@@ -10,7 +12,7 @@ public class CharacterController2D : MonoBehaviour
 
     const float k_GroundedRadius = .1f; // 用于检测地面的小圆形的半径
     private bool m_Grounded;            // 当前是否在地面上
-    private bool m_FacingRight = true;  // 玩家是否面朝右边
+    public bool m_FacingRight = true;  // 玩家是否面朝右边
     private Vector3 m_Velocity = Vector3.zero;
 
     const float m_NextGroundCheckLag = 1f;    // 起跳后的一小段时间，不能再次起跳。防止连跳的一种解决方案
@@ -33,6 +35,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
