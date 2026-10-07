@@ -10,7 +10,7 @@ public class CharacterController2D : MonoBehaviour
     public LayerMask groundMask;                            // 定义哪一个Layer是地面
     public Transform m_GroundCheck;                         // 用于判定地面的空物体
 
-    const float k_GroundedRadius = .1f; // 用于检测地面的小圆形的半径
+    const float k_GroundedRadius = 0.3f; // 用于检测地面的小圆形的半径
     private bool m_Grounded;            // 当前是否在地面上
     public bool m_FacingRight = true;  // 玩家是否面朝右边
     private Vector3 m_Velocity = Vector3.zero;
