@@ -12,6 +12,7 @@ public class GameData
     public PositionData playerPos; // 玩家位置数据
     public float musicVolume = 0.5f; // 音乐音量
     public float soundVolume = 0.5f; // 音效音量
+    public E_SceneType sceneType = E_SceneType.BeginScene; // 场景类型
 }
 
 /// <summary>

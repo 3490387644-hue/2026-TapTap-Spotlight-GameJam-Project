@@ -10,6 +10,8 @@ public class MagmaTrigger : MonoBehaviour
         if(collision.gameObject.tag=="Player")
         {
             collision.transform.position=CheckpointMgr.Instance.GetCheckPoint().transform.position;
+            Debug.Log("MagmaTrigger´¥·¢: " + this.gameObject.name);
+            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2);
         }
     }
 }

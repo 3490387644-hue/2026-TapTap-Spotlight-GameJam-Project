@@ -9,6 +9,8 @@ public class Checkpoint : MonoBehaviour
         if(collision.gameObject.tag=="Player")
         {
             CheckpointMgr.Instance.PushCheckPoint(this.gameObject);
+            Debug.Log("Checkpoint´¥·¢: " + this.gameObject.name);
+            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2);
         }
     }
 }

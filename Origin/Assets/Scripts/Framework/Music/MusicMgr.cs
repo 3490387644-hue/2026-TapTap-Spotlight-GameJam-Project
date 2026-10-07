@@ -44,6 +44,7 @@ public class MusicMgr : BaseManager<MusicMgr>
             bkMusic.volume = bkMusicValue;
             bkMusic.Play();
         });
+        // ResMgr.Instance.LoadResAsync<>
     }
 
     //Õ£÷π±≥æ∞“Ù¿÷
