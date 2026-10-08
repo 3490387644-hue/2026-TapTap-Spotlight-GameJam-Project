@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
+    //ï¿½ï¿½Ò»ï¿½Î¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    int count = 1;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag=="Player")
+        if(collision.gameObject.tag=="Player"&&count>0)
         {
             CheckpointMgr.Instance.PushCheckPoint(this.gameObject);
-            Debug.Log("Checkpoint´¥·¢: " + this.gameObject.name);
+            count--;
+            Debug.Log("Checkpointï¿½ï¿½ï¿½ï¿½: " + this.gameObject.name);
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2);
         }
     }
