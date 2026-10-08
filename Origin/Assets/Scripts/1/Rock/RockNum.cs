@@ -8,4 +8,6 @@ public class RockNum : MonoBehaviour
     public int collidableNum;
     //是否生成绿藻
     public bool isBornAlgae;
+    //是否生成黑雾
+    public bool isBornFog;
 }

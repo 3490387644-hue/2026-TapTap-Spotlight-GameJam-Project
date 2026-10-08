@@ -34,6 +34,9 @@ public class Collidable : MonoBehaviour
                         Destroy(colliders[i].gameObject,1.5f);
                         if (colliders[i].gameObject.GetComponent<RockNum>().isBornAlgae)
                             StartCoroutine(myCoroutine(colliders[i].gameObject));
+                        if(colliders[i].gameObject.GetComponent<RockNum>().isBornFog)
+                            StartCoroutine(myCoroutine2(colliders[i].gameObject));
+
                     }
                 }
             }
@@ -44,6 +47,14 @@ public class Collidable : MonoBehaviour
     {
         yield return new WaitForSeconds(1.3f);
         AlgaeBorn.Instance.AlgaeCreate(obj);
+    }
+
+    IEnumerator myCoroutine2(GameObject obj)
+    {
+        Vector3 p=obj.transform.position+Vector3.up;
+        quaternion r=obj.transform.rotation;
+        yield return new WaitForSeconds(1.35f);
+        GameObject fog = Instantiate(ResMgr.Instance.Load<GameObject>("Prefabs/Fogs/Fog"),p,r);
     }
 
     // GizmosªÊ÷∆∑∂Œß
