@@ -16,7 +16,7 @@ TagManager:
   - Ground
   - Green Algae
   - Collidable Rock
-  - 
+  - Black Fog
   - 
   - 
   - 
@@ -42,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 134616505
+    locked: 0
+  - name: Player
+    uniqueID: 1344958721
     locked: 0

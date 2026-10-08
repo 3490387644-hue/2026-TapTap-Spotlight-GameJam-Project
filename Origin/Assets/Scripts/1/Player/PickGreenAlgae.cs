@@ -22,13 +22,17 @@ public class PickGreenAlgae : MonoBehaviour
         {
             if(CharacterController2D.Instance.m_FacingRight)
             {
-                this.transform.localScale = new Vector3(0.35f, 0.35f, 1);
+                this.transform.localScale = new Vector3(0.28f, 0.28f, 1);
             }
             else
             {
-                this.transform.localScale = new Vector3(-0.35f,0.35f,1);
+                this.transform.localScale = new Vector3(-0.28f,0.28f,1);
             }
-            CharacterController2D.Instance.jumpForce = 500;
+            CharacterController2D.Instance.jumpForce = 550;
+        }
+        if(algaeNum==10)
+        {
+            glow.Instance.isGlow = true;
         }
     }
 
