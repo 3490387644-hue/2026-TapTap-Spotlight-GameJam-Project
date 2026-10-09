@@ -126,4 +126,15 @@ public class CharacterController2D2 : MonoBehaviour
         // 缩放的x轴乘以-1，图片就水平翻转了
         transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
     }
+
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Wall")
+    //    {
+    //        float z = collision.gameObject.transform.eulerAngles.z;
+    //        z *= -1;
+    //        Quaternion newZ = Quaternion.Euler(0, 0,z);
+    //        this.transform.rotation = Quaternion.Slerp(this.transform.rotation,newZ, Time.deltaTime);
+    //    }
+    //}
 }

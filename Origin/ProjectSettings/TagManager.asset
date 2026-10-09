@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Green Algae
   - Collidable Rock
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - Green Algae
   - Collidable Rock
   - Black Fog
-  - 
+  - Wall
   - 
   - 
   - 
