@@ -206,12 +206,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 835443459, guid: 46d8661af9fee464991c04f8bcc7dc31, type: 3}
+  m_Sprite: {fileID: -1320845242, guid: 111d84ca2729f744d9b045c859ede35f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5.73, y: 3.34}
+  m_Size: {x: 2.53, y: 4.400781}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -227,7 +227,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.33129835, y: -0.68243766, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 701647638}
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937c92e40e4538241aadf6872593e567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  moveSpeed: 5
 --- !u!50 &331452298
 Rigidbody2D:
   serializedVersion: 4
@@ -305,8 +305,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.31040668, y: -0.27073386}
-  m_Size: {x: 4.2257, y: 2.1720543}
+  m_Offset: {x: 0.048031006, y: -0.10927302}
+  m_Size: {x: 3.700964, y: 1.8491454}
   m_Direction: 1
 --- !u!114 &331452300
 MonoBehaviour:
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fe4a5d7e07416545955d11549c5786c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpForce: 400
+  jumpForce: 600
   canAirControl: 1
   groundMask:
     serializedVersion: 2
