@@ -122,7 +122,7 @@ public class CharacterController2D2 : MonoBehaviour
     {
         // true变false，false变true
         m_FacingRight = !m_FacingRight;
-
+        ChangeRotation.Instance.isRight= m_FacingRight;
         // 缩放的x轴乘以-1，图片就水平翻转了
         transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
     }
