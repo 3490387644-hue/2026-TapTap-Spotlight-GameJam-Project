@@ -15,15 +15,18 @@ public class ClimbWall : MonoBehaviour
     public Vector3 wallOffset; //以对象位置为原点偏移
     public LayerMask mask; //范围检测层
     public float climbSpeed=3; //攀爬速度
-    private float radius = 0.1f; //检测范围半径
+    public float radius = 0.1f; //检测范围半径
     private bool isLeftWall; //是否检测到左墙体
     private bool isRightWall; //是否检测到右墙体
     private bool onWall; //是否在墙体上
+    private bool beforeClimb=false; //进入攀爬状态动画是否播放
     private Rigidbody2D rb;
+    private Animator animator;
     private WallType type;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         type=WallType.None; //初始默认为None状态
     }
 
@@ -35,14 +38,16 @@ public class ClimbWall : MonoBehaviour
         if(Input.GetKey(KeyCode.LeftShift)&&(isRightWall||isLeftWall))
         {
             onWall = true;
+            WallEnter();
         }
-        else
+        if(!isRightWall&&!isLeftWall)
         {
             onWall = false;
         }
         if(onWall)
         {
             rb.gravityScale = 0;
+            rb.constraints = RigidbodyConstraints2D.None;
             if (v>0)
             {
                 WallW();
@@ -59,7 +64,9 @@ public class ClimbWall : MonoBehaviour
         else
         {
             type = WallType.None;
-            rb.gravityScale = 1;
+            //rb.gravityScale = 1;
+            PlayerMove2.Instance.isMove = true;
+            beforeClimb = false;
         }
     }
 
@@ -74,6 +81,7 @@ public class ClimbWall : MonoBehaviour
     {
         rb.velocity = Vector3.zero;
         type = WallType.WallUp;
+        animator.SetBool("isClimb",true);
         rb.velocity = new Vector2(rb.velocity.x,climbSpeed);
     }
 
@@ -82,6 +90,7 @@ public class ClimbWall : MonoBehaviour
     {
         rb.velocity=Vector3.zero;
         type = WallType.WallDown;
+        animator.SetBool("isClimb", true);
         rb.velocity = new Vector2(rb.velocity.x,-climbSpeed);
     }
 
@@ -89,7 +98,16 @@ public class ClimbWall : MonoBehaviour
     void WallStop()
     {
         rb.velocity= Vector3.zero;
-        type=WallType.WallWait;
+        animator.SetBool("isClimb", false);
+        type =WallType.WallWait;
+    }
+
+    //进入攀爬状态函数
+    void WallEnter()
+    {
+        PlayerMove2.Instance.isMove = false;
+        animator.SetTrigger("beforeClimb");
+        beforeClimb = true;
     }
 
     private void OnDrawGizmos()
