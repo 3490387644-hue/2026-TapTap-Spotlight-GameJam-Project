@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class PlayerMove2 : MonoBehaviour
 {
+    private static PlayerMove2 instance;
+    public static PlayerMove2 Instance=>instance;
     //移动速度
     public float moveSpeed = 2;
+
+    //玩家是否可以移动
+    public bool isMove=true;
 
     private CharacterController2D2 characterController;
 
@@ -15,6 +20,11 @@ public class PlayerMove2 : MonoBehaviour
     private float move;
     private bool jump;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Start()
     {
         characterController = GetComponent<CharacterController2D2>();
@@ -29,6 +39,9 @@ public class PlayerMove2 : MonoBehaviour
 
     private void FixedUpdate()
     {
-        characterController.Move(move, jump);
+        if (isMove)
+        {
+            characterController.Move(move, jump);
+        }
     }
 }

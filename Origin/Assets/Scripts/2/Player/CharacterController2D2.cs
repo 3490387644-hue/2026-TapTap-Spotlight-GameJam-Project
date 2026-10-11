@@ -9,9 +9,11 @@ public class CharacterController2D2 : MonoBehaviour
     public bool canAirControl = false;                      // 在空中时，是否能控制
     public LayerMask groundMask;                            // 定义哪一个Layer是地面
     public Transform m_GroundCheck;                         // 用于判定地面的空物体
+    public float antiSlideFactor = 1f; // 防滑力度，一般1足够
 
     const float k_GroundedRadius = 0.3f; // 用于检测地面的小圆形的半径
     private bool m_Grounded;            // 当前是否在地面上
+    private Vector2 target; //速度方向
     public bool m_FacingRight = true;  // 玩家是否面朝右边
     private Vector3 m_Velocity = Vector3.zero;
 
@@ -23,6 +25,7 @@ public class CharacterController2D2 : MonoBehaviour
 
     //玩家对象上的动画状态机
     private Animator animator;
+
 
     [Header("Events")]
     [Space]
@@ -79,11 +82,23 @@ public class CharacterController2D2 : MonoBehaviour
     public void Move(float move, bool jump)
     {
         // 玩家在地面时，或者可以空中控制时，才能移动
-        if (m_Grounded || canAirControl)
+        if (m_Grounded /*|| canAirControl*/)
         {
-            // 输入变量move决定横向速度
-            m_Rigidbody2D.velocity = new Vector2(move, m_Rigidbody2D.velocity.y);
 
+            Vector2 nomal = ChangeRotation.Instance.avg;
+            if (m_FacingRight)
+            {
+                target = new Vector2(nomal.y, -nomal.x).normalized;
+                m_Rigidbody2D.velocity = target * move;
+            }
+            else
+            {
+                target = new Vector2(-nomal.y, nomal.x).normalized;
+                m_Rigidbody2D.velocity = target * -move;
+            }
+
+            // 输入变量move决定横向速度
+            //m_Rigidbody2D.velocity = new Vector2(move, m_Rigidbody2D.velocity.y);
             // 面朝右时按左键，或面朝左时按右键，都会让角色水平翻转
             if (move > 0 && !m_FacingRight)
             {
@@ -101,6 +116,15 @@ public class CharacterController2D2 : MonoBehaviour
             }
             else
             {
+                print("aa");
+
+                Vector2 gravityDir = Physics2D.gravity;
+                // 重力在坡面切线方向的分力
+                Vector2 tangent = new Vector2(ChangeRotation.Instance.avg.y, -ChangeRotation.Instance.avg.x);
+                float gravityTangent = Vector2.Dot(gravityDir, tangent);
+                Vector2 antiSlideForce = -tangent * gravityTangent * m_Rigidbody2D.mass * antiSlideFactor;
+                m_Rigidbody2D.AddForce(antiSlideForce, ForceMode2D.Force);
+
                 animator.SetBool("isMove", false);
             }
         }
@@ -111,7 +135,7 @@ public class CharacterController2D2 : MonoBehaviour
             OnAirEvent.Invoke();
             m_Grounded = false;
             // 施加弹跳力
-            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce),ForceMode2D.Impulse);
             animator.SetTrigger("isJump");
             m_NextGroundCheckTime = Time.time + m_NextGroundCheckLag;
         }
@@ -122,7 +146,6 @@ public class CharacterController2D2 : MonoBehaviour
     {
         // true变false，false变true
         m_FacingRight = !m_FacingRight;
-        ChangeRotation.Instance.isRight= m_FacingRight;
         // 缩放的x轴乘以-1，图片就水平翻转了
         transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
     }
