@@ -128,6 +128,13 @@ public class CharacterController2D2 : MonoBehaviour
                 animator.SetBool("isMove", false);
             }
         }
+        else
+        {
+            if (canAirControl)
+            {
+                m_Rigidbody2D.velocity = new Vector2(move, m_Rigidbody2D.velocity.y);
+            }
+        }
 
         // 在地面时按下跳跃键，就会跳跃
         if (m_Grounded && jump && Time.time >= m_NextGroundCheckTime)
@@ -135,7 +142,8 @@ public class CharacterController2D2 : MonoBehaviour
             OnAirEvent.Invoke();
             m_Grounded = false;
             // 施加弹跳力
-            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce),ForceMode2D.Impulse);
+            m_Rigidbody2D.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            this.transform.rotation=Quaternion.identity;
             animator.SetTrigger("isJump");
             m_NextGroundCheckTime = Time.time + m_NextGroundCheckLag;
         }
