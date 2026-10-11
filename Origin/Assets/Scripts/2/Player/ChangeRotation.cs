@@ -35,7 +35,7 @@ public class ChangeRotation : MonoBehaviour
         hit2 = Physics2D.Raycast(point2.position, -transform.up, rayLength, mask);
         avg=((hit1.normal+hit2.normal)/2).normalized;
         
-        if (hit1&&hit2&&(Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.D)))
+        if (hit1&&hit2/*&&(Input.GetKey(KeyCode.A)||Input.GetKey(KeyCode.D))*/)
         {
             float targetAngle = Mathf.Atan2(hit1.normal.y, hit1.normal.x) * Mathf.Rad2Deg - 90;
             float currentAngle = transform.rotation.eulerAngles.z;
