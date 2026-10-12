@@ -45,15 +45,24 @@ public class ChangeRotation : MonoBehaviour
         avg=((hit1.normal+hit2.normal)/2).normalized;
 
         float angle = Vector2.Angle(hit1.normal.normalized, Vector2.up); //法线和世界坐标上方向的夹角
-        if(angle>=0&&angle<=60||Input.GetKey(KeyCode.LeftShift))
+        if(angle>=0&&angle<=60)
         {
             isWall = true;
         }
         else
         {
             isWall = false;
+            if(Input.GetKey(KeyCode.LeftShift))
+            {
+                isWall=true;
+            }
             //this.transform.rotation = Quaternion.identity;
         }
+
+        //if(angle >= 60 && angle <= 90 && Input.GetKey(KeyCode.LeftShift))
+        //{
+        //    isWall= true;
+        //}
 
         if (hit1 && hit2 && isWall)
         {
