@@ -82,7 +82,7 @@ public class CharacterController2D2 : MonoBehaviour
     public void Move(float move, bool jump)
     {
         // 玩家在地面时，或者可以空中控制时，才能移动
-        if (m_Grounded /*|| canAirControl*/)
+        if (m_Grounded&&ChangeRotation.Instance.isWall)
         {
 
             Vector2 nomal = ChangeRotation.Instance.avg;
@@ -116,8 +116,6 @@ public class CharacterController2D2 : MonoBehaviour
             }
             else
             {
-                print("aa");
-
                 Vector2 gravityDir = Physics2D.gravity;
                 // 重力在坡面切线方向的分力
                 Vector2 tangent = new Vector2(ChangeRotation.Instance.avg.y, -ChangeRotation.Instance.avg.x);
@@ -137,7 +135,7 @@ public class CharacterController2D2 : MonoBehaviour
         }
 
         // 在地面时按下跳跃键，就会跳跃
-        if (m_Grounded && jump && Time.time >= m_NextGroundCheckTime)
+        if (m_Grounded&& jump && Time.time >= m_NextGroundCheckTime)
         {
             OnAirEvent.Invoke();
             m_Grounded = false;
