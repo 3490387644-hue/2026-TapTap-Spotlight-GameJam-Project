@@ -35,6 +35,10 @@ public class PlayerMove2 : MonoBehaviour
     {
         move = Input.GetAxis("Horizontal") * moveSpeed;
         jump = Input.GetKey(KeyCode.Space);
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            this.transform.position = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
+        }
     }
 
     private void FixedUpdate()
