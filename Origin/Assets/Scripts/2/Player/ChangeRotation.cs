@@ -52,7 +52,7 @@ public class ChangeRotation : MonoBehaviour
         else
         {
             isWall = false;
-            this.transform.rotation = Quaternion.identity;
+            //this.transform.rotation = Quaternion.identity;
         }
 
         if (hit1 && hit2 && isWall)

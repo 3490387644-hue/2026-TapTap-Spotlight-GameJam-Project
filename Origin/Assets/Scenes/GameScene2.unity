@@ -2337,7 +2337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayLength: 2
-  rotationTime: 0.3
+  rotationTime: 0.05
   mask:
     serializedVersion: 2
     m_Bits: 1088

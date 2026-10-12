@@ -82,16 +82,16 @@ public class CharacterController2D2 : MonoBehaviour
     public void Move(float move, bool jump)
     {
         // 玩家在地面时，或者可以空中控制时，才能移动
-        if (m_Grounded&&ChangeRotation.Instance.isWall)
+        if (m_Grounded)
         {
 
             Vector2 nomal = ChangeRotation.Instance.avg;
-            if (m_FacingRight)
+            if (m_FacingRight && ChangeRotation.Instance.isWall)
             {
                 target = new Vector2(nomal.y, -nomal.x).normalized;
                 m_Rigidbody2D.velocity = target * move;
             }
-            else
+            if(!m_FacingRight&&ChangeRotation.Instance.isWall)
             {
                 target = new Vector2(-nomal.y, nomal.x).normalized;
                 m_Rigidbody2D.velocity = target * -move;
