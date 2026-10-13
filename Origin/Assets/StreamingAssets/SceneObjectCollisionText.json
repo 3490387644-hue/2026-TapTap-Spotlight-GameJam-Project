@@ -1,0 +1,44 @@
+﻿[
+  {
+    "ID": 0,
+    "Text": "按住“D”“A”前进和后退",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 1,
+    "Text": " 啊好烫！",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 2,
+    "Text": "另一个我？",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 3,
+    "Text": "好像有什么不一样了",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 4,
+    "Text": "一股奇妙的感觉",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 5,
+    "Text": "似乎有大事要发生",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 6,
+    "Text": "我好像变大了一圈",
+    "Type": 1,
+    "HasTriggered": false
+  }
+]

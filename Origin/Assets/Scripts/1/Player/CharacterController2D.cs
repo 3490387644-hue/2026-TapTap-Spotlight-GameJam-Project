@@ -75,7 +75,6 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-
     public void Move(float move, bool jump)
     {
         // 玩家在地面时，或者可以空中控制时，才能移动
@@ -125,5 +124,18 @@ public class CharacterController2D : MonoBehaviour
 
         // 缩放的x轴乘以-1，图片就水平翻转了
         transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
+    }
+
+    public void OnLandSound()
+    {
+        Debug.Log("角色落地音效");
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.LandSound, false, false);
+    }
+
+    public void OnJumpSound()
+    {
+        // 发出跳跃音效
+        Debug.Log("角色跳跃音效");
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.JumpSound, false, false);
     }
 }

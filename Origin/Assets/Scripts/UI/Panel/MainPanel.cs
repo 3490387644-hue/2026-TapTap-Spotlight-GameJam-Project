@@ -6,24 +6,35 @@ using UnityEngine.UI;
 
 public class MainPanel : BasePanel
 {
+    public GameObject[] mainPanels; // 两种主面板
+    public Button[] buttons;
     private Dictionary<string, Button> buttonDic = new Dictionary<string, Button>();
+    private int pIndex = 0; // 当前主面板索引
     public override void Init()
     {
-        // 面板的所有按钮都放到字典里
-        Button[] btns = GetComponentsInChildren<Button>();
-        foreach(Button btn in btns)
+        for(int i = 0; i < mainPanels.Length; i++)
         {
-            btn.AddComponent<BaseButton>();
-            buttonDic.Add(btn.name, btn);
-            Debug.Log("Button added: " + btn.name);
+            mainPanels[i].SetActive(i == pIndex);
         }
-
-        // 给按钮添加点击事件
-        buttonDic["SettingButton"].onClick.AddListener(OnClickSettingButton);
-
-        buttonDic["QuitButton"].onClick.AddListener(OnClickQuitButton);
-
+        // 面板的所有按钮都放到字典里
+        buttonDic.Clear();
+        for(int i = 0; i < buttons.Length; i++)
+        {
+            buttonDic.Add(buttons[i].name, buttons[i]);
+        }
+        // 根据面板类型为按钮添加点击事件
         UpdateInfoBySaveData();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        GameDataMgr.Instance.Init(); // 确保游戏数据已初始化
+        pIndex = GameDataMgr.Instance.gameData.hasSaveData ? 1 : 0;
+        for(int i = 0; i < mainPanels.Length; i++)
+        {
+            mainPanels[i].SetActive(i == pIndex);
+        }
     }
 
     /// <summary>
@@ -33,53 +44,50 @@ public class MainPanel : BasePanel
     /// </summary>
     private void UpdateInfoBySaveData()
     {
-        // 如果没有存档数据
-        if(!GameDataMgr.Instance.gameData.hasSaveData)
-        {
-            Debug.Log("没有存档数据");
-            Button startButton = buttonDic["ContinueButton"];
-            startButton.name = "StartButton";
-            startButton.GetComponentInChildren<Text>().text = "开始游戏";
-            buttonDic.Remove("ContinueButton");
-            buttonDic.Add("StartButton", startButton);
-
-            Button aboutButton = buttonDic["AboutButton"];
-            Button newGameButton = buttonDic["NewGameButton"];
-            newGameButton.GetComponentInChildren<Text>().text = "关于";
-            newGameButton.transform.localPosition = aboutButton.transform.localPosition;
-            Destroy(aboutButton.gameObject);
-            buttonDic.Remove("AboutButton");
-            buttonDic.Remove("NewGameButton");
-            buttonDic["AboutButton"] = newGameButton;
-            newGameButton.name = "AboutButton";
-            newGameButton.onClick.AddListener(OnClickAboutButton);
-
-            startButton.onClick.AddListener(OnClickStartButton);
-        }
-        // 如果有存档数据
-        else
-        {
-            buttonDic["ContinueButton"].onClick.AddListener(OnClickContinueButton);
-            buttonDic["NewGameButton"].onClick.AddListener(OnClickNewGameButton);
-            buttonDic["AboutButton"].onClick.AddListener(OnClickAboutButton);
-        }
+        // switch(pIndex)
+        // {
+        //     case 0:
+        //         UpdatePanel1Info();
+        //         break;
+        //     case 1:
+        //         UpdatePanel2Info();
+        //         break;
+        // }
+        buttonDic["StartButton"].onClick.AddListener(OnClickStartButton);
+        buttonDic["SettingButton"].onClick.AddListener(OnClickSettingButton);
+        buttonDic["QuitButton"].onClick.AddListener(OnClickQuitButton);
+        buttonDic["AboutButton"].onClick.AddListener(OnClickAboutButton);
+        buttonDic["ContinueButton"].onClick.AddListener(OnClickContinueButton);
+        buttonDic["NewGameButton"].onClick.AddListener(OnClickNewGameButton);
     }
 
     private void OnClickStartButton()
     {
         Debug.Log("开始游戏");
-        // 待写：单击选项会有清脆敲击声
-        
+        UIManager.Instance.HidePanel<MainPanel>();
+        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene1, () =>
+        {
+            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type1, 0, "");
+            GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter1_Level1);
+        });
     }
 
     private void OnClickContinueButton()
     {
         Debug.Log("继续游戏");
+        GameDataMgr.Instance.Init(); // 重新加载存档数据，确保对话触发状态正确
+        UIManager.Instance.HidePanel<MainPanel>();
+        GameSceneManager.Instance.LoadScene(GameDataMgr.Instance.gameData.sceneType, ()=>
+        {
+            GameSceneManager.Instance.PlayMusicByTriggerType(GameDataMgr.Instance.gameData.currentMusicTriggerType);
+        });
         // UIManager.Instance.HidePanel<MainPanel>(true, (panel)=>
         // {
         //     DialogManager.Instance.Init();
         //     DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type1);
         // });
+        // 根据存档数据的场景类型来决定进入哪个场景
+        
     }
 
     private void OnClickSettingButton()
@@ -103,6 +111,10 @@ public class MainPanel : BasePanel
     private void OnClickQuitButton()
     {
         Debug.Log("退出游戏");
+        if(GameSceneManager.Instance.player != null)
+        {
+            GameDataMgr.Instance.SaveGameData();
+        }
         Application.Quit();
     }
 

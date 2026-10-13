@@ -10,7 +10,6 @@ public class Checkpoint : MonoBehaviour
         {
             CheckpointMgr.Instance.PushCheckPoint(this.gameObject);
             Debug.Log("Checkpoint´¥·¢: " + this.gameObject.name);
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2);
         }
     }
 }
