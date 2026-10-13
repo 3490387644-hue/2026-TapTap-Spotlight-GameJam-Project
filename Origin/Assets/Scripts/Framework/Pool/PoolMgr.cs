@@ -129,7 +129,10 @@ public class PoolMgr : BaseManager<PoolMgr>
         GameObject obj;
         //如果根物体为空 就创建
         if (poolObj == null && isOpenLayout)
+        {
             poolObj = new GameObject("Pool");
+            GameObject.DontDestroyOnLoad(poolObj);
+        }
 
         if (!poolDic.ContainsKey(name)||
             (poolDic[name].Count == 0 && poolDic[name].UsedCount<maxNum))

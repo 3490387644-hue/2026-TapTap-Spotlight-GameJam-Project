@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -14,14 +15,16 @@ public class LoadingPanel : BasePanel
     public override void Init()
     {
         isDestroy = true;
+        progressSlider.value = 0f;
     }
 
     /// <summary>
     /// 进行场景加载
     /// 因为需要反复用到 所以不能直接写在Init中
     /// </summary>
-    public void InitProgress(string resPath)
+    public void InitProgress(E_SceneType sceneType, UnityAction callback = null)
     {
+        string resPath = sceneType.ToString(); // 将场景类型转换为字符串，作为场景的路径
         if(string.IsNullOrEmpty(resPath))
         {
             Debug.LogError("加载路径为空");
@@ -30,11 +33,17 @@ public class LoadingPanel : BasePanel
 
         SetProgress(0f);
 
-        StartCoroutine(LoadScene(resPath));
+        //提前预加载第一章的背景音乐 避免进入游戏后切换音乐时卡顿
+        MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter1 + "1-1");
+        MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter1 + "1-2");
+        MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter1 + "1-3");
+
+        StartCoroutine(LoadScene(resPath, callback));
     }
 
-    IEnumerator LoadScene(string sceneName)
+    IEnumerator LoadScene(string sceneName, UnityAction callback = null)
     {
+        MusicMgr.Instance.ClearSound();
         float startTime = Time.realtimeSinceStartup;
 
         if (progressDesc != null)
@@ -78,7 +87,7 @@ public class LoadingPanel : BasePanel
 
         if (remainingTime > 0f)
         {
-            yield return new WaitForSecondsRealtime(remainingTime);
+            yield return new WaitForSecondsRealtime(remainingTime + 1f);
         }
 
         SetProgress(1f);
@@ -93,12 +102,20 @@ public class LoadingPanel : BasePanel
 
         // 激活场景
         operation.allowSceneActivation = true;
+        yield return null;
         Debug.Log("场景加载完成：" + sceneName);
         UIManager.Instance.HidePanel<LoadingPanel>(true, (panel)=>
         {
             Debug.Log("DialogManager");
-            DialogManager.Instance.Init();
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type1);
+            E_SceneType scene = GameSceneManager.Instance.currentSceneType;
+            if(scene == E_SceneType.GameScene1 || scene == E_SceneType.GameScene2)
+                UIManager.Instance.ShowPanelAsync<QuitPanel>();
+            else
+            {
+                if(UIManager.Instance.GetPanel<QuitPanel>() != null)
+                    UIManager.Instance.HidePanel<QuitPanel>();
+            }
+            callback?.Invoke();
         });
     }
 

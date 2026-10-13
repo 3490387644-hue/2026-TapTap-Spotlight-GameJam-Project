@@ -10,20 +10,26 @@ public class ClearPanel : BasePanel
     public override void Init()
     {
         //初始化面板的逻辑
-        yesButton.onClick.AddListener(()=>
+        yesButton.onClick.AddListener(() =>
         {
-            // // 播放开场动画
-            
-            // 测试脚本
-            UIManager.Instance.ShowPanelAsync<LoadingPanel>((panel)=>
+            // 1) 先清档，异常包住，绝不影响界面切换
+            try
             {
-                panel.InitProgress("GameScene");
-            });
+                GameDataMgr.Instance.ClearAllSaveData();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("[ClearPanel] 清档失败：" + e);
+            }
+
+            // 2) 直接隐藏自己，不要放进 ShowPanelAsync 的回调里
             UIManager.Instance.HidePanel<ClearPanel>();
-            UIManager.Instance.HidePanel<MainPanel>();
+
+            // 3) 显示主面板（此时 OnEnable 读到的已经是清空后的数据）
+            UIManager.Instance.ShowPanelAsync<MainPanel>();
         });
 
-        noButton.onClick.AddListener(()=>
+        noButton.onClick.AddListener(() =>
         {
             UIManager.Instance.ShowPanelAsync<MainPanel>();
             UIManager.Instance.HidePanel<ClearPanel>();

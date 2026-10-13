@@ -31,7 +31,13 @@ public class GamePanel : BasePanel
         {
             Debug.Log("返回主菜单");
             UIManager.Instance.HidePanel<GamePanel>();
-            UIManager.Instance.ShowPanelAsync<MainPanel>();
+            MusicMgr.Instance.StopBKMusic();
+            GameDataMgr.Instance.SaveGameData();
+            GameSceneManager.Instance.LoadScene(E_SceneType.BeginScene, ()=>
+            {
+                UIManager.Instance.ShowPanelAsync<MainPanel>();
+                Debug.Log("返回主菜单，游戏数据已保存");
+            });
         });
     }
 }

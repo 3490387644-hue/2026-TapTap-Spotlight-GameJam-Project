@@ -11,14 +11,10 @@ public enum E_SettingSource
 
 public class SettingPanel : BasePanel
 {
-    public Text musicVolumeText;
-    public Text soundVolumeText;
-    public Button musicUpButton;
-    public Button musicDownButton;
-    public Button soundUpButton;
-    public Button soundDownButton;
     public Button backButton;
     public Dropdown resolutionDropdown;
+    public Slider musicVolumeSlider;
+    public Slider soundVolumeSlider;
     private int musicVolume;
     private int soundVolume;
     private E_SettingSource source;
@@ -33,7 +29,8 @@ public class SettingPanel : BasePanel
         // 初始化设置面板的内容
         Debug.Log("SettingPanel initialized.");
 
-        UpdateInfo();
+        UpdateVolumeInfo();
+
         InitResolutionDropdown();
 
         backButton.onClick.AddListener(()=>
@@ -53,59 +50,21 @@ public class SettingPanel : BasePanel
             }
         });
 
-        // 设置按钮的点击事件
-        musicUpButton.onClick.AddListener(()=>
+        musicVolumeSlider.onValueChanged.AddListener((value) =>
         {
-            Debug.Log("Music volume up button clicked.");
-            // 告诉MusicMgr增加音量
-            
-            // 更新musicVolumeText的显示
-            musicVolume++;
-            if(musicVolume > 10)
-                musicVolume = 10;
-            musicVolumeText.text = "音量：" + musicVolume.ToString();
+            MusicMgr.Instance.ChangeBKMusicValue(value);
         });
 
-        musicDownButton.onClick.AddListener(()=>
+        soundVolumeSlider.onValueChanged.AddListener((value) =>
         {
-            Debug.Log("Music volume down button clicked.");
-            musicVolume--;
-            if(musicVolume < 0)
-                musicVolume = 0;
-            musicVolumeText.text = "音量：" + musicVolume.ToString();
-        });
-
-        soundUpButton.onClick.AddListener(()=>
-        {
-            Debug.Log("Sound volume up button clicked.");
-            soundVolume++;
-            if(soundVolume > 10)
-                soundVolume = 10;
-            soundVolumeText.text = "音效：" + soundVolume.ToString();
-        });
-
-        soundDownButton.onClick.AddListener(()=>
-        {
-            Debug.Log("Sound volume down button clicked.");
-            soundVolume--;
-            if(soundVolume < 0)
-                soundVolume = 0;
-            soundVolumeText.text = "音效：" + soundVolume.ToString();
+            MusicMgr.Instance.ChangeSoundValue(value);
         });
     }
 
-    /// <summary>
-    /// 打开设置面板时需要更新面板信息
-    /// </summary>
-    private void UpdateInfo()
+    private void UpdateVolumeInfo()
     {
-        // 暂时先这么写
-        musicVolume = 5;
-        musicVolumeText.text = "音量：" + musicVolume.ToString();
-        soundVolume = 5;
-        soundVolumeText.text = "音效：" + soundVolume.ToString();
-        // 后续从GameDataMgr.Instance.gameData中获取音量和音效的设置
-        
+        musicVolumeSlider.value = MusicMgr.Instance.GetBkMusicValue;
+        soundVolumeSlider.value = MusicMgr.Instance.GetSoundValue;
     }
 
     private void InitResolutionDropdown()

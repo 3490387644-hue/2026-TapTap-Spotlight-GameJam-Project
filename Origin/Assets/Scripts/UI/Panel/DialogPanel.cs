@@ -15,6 +15,13 @@ public class DialogPanel : BasePanel
     public CanvasGroup type2Group; // 这个是类型2的文本和图片的父对象上的CanvasGroup 用于将它们一起隐藏和显示
     public Text tip1;
     private UnityAction onDialogFinished; // 对话结束时的回调函数
+
+    protected override void Awake()
+    {
+        base.Awake();
+        playUIBGM = false; // 对话面板不播放UIBGM
+    }
+
     public override void Init()
     {
         tip1.text = "按任意键继续";
@@ -32,10 +39,6 @@ public class DialogPanel : BasePanel
             case E_DialogFuncType.Type2:
                 // 执行类型2的功能
                 Func2();
-                break;
-            case E_DialogFuncType.Type3:
-                // 执行类型3的功能
-                Func3();
                 break;
         }
     }

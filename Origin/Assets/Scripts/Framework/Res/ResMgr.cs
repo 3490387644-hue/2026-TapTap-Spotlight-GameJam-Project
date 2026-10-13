@@ -17,8 +17,6 @@ public class ResMgr : BaseManager<ResMgr>
         return Resources.Load<T>(path);
     }
 
-
-
     /// <summary>
     /// 异步加载资源的方法一
     /// </summary>
@@ -64,6 +62,20 @@ public class ResMgr : BaseManager<ResMgr>
         callBack(rq.asset);
     }
 
+    // 这个是我在做MusicMgr的时候改的，不知道为啥这么改可以去MusicMgr播放音乐的代码看一下
+    // 主要是因为MusicMgr的PlaySound有问需不需要异步加载 我就直接在这里封装了
+    public T LoadRes<T>(string path, bool isAsync, UnityAction<T> callBack = null) where T : UnityEngine.Object
+    {
+        if(isAsync)
+        {
+            LoadAsync<T>(path, callBack);
+            return null;
+        }
+        else
+        {
+            return Load<T>(path);
+        }
+    }
 
     /// <summary>
     /// 指定卸载一个资源
