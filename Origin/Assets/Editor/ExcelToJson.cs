@@ -13,45 +13,44 @@ using UnityEngine;
 
 public static class ExcelToJson
 {
-    private const string OutputFileName = "DialogData.json";
-
     [MenuItem("TapTapGameTools/Excel2Json")]
     private static void ConvertExcelToJson()
     {
-        string excelPath = EditorUtility.OpenFilePanel("Ñ¡Ôñ Excel ÎÄ¼ş", @"D:\", "xlsx");
+        string excelPath = EditorUtility.OpenFilePanel("é€‰æ‹© Excel æ–‡ä»¶", @"D:\", "xlsx");
         if (string.IsNullOrEmpty(excelPath)) return;
 
         try
         {
-            List<Dictionary<string, object>> rows = ReadWorkbook(excelPath);
-            string outputPath = Path.Combine(Application.dataPath, "StreamingAssets", OutputFileName);
+            string sheetName;
+            List<Dictionary<string, object>> rows = ReadWorkbook(excelPath, out sheetName);
+            string outputPath = Path.Combine(Application.dataPath, "StreamingAssets", sheetName + ".json");
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
-            // ĞŞ¸´ÂÒÂë£ºÊ¹ÓÃ UTF-8 BOM ±àÂëĞ´Èë£¬LitJson ¶ÁÈ¡Ê±ÖĞÎÄ²»»áÂÒÂë
+            // ä½¿ç”¨ UTF-8 BOM ç¼–ç å†™å…¥ï¼Œé¿å… LitJson è¯»å–æ—¶ä¸­æ–‡ä¹±ç 
             File.WriteAllText(outputPath, SerializeRows(rows), new UTF8Encoding(true));
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("Excel2Json",
-                $"×ª»»³É¹¦£¬¹²µ¼³ö {rows.Count} ĞĞÊı¾İ¡£\n{outputPath}", "È·¶¨");
+                $"è½¬æ¢æˆåŠŸï¼Œå…±è¯»å– {rows.Count} æ¡æ•°æ®ã€‚\n{outputPath}", "ç¡®å®š");
         }
         catch (Exception e)
         {
             Debug.LogException(e);
-            EditorUtility.DisplayDialog("Excel2Json ×ª»»Ê§°Ü", e.Message, "È·¶¨");
+            EditorUtility.DisplayDialog("Excel2Json è½¬æ¢å¤±è´¥", e.Message, "ç¡®å®š");
         }
     }
 
-    private static List<Dictionary<string, object>> ReadWorkbook(string path)
+    private static List<Dictionary<string, object>> ReadWorkbook(string path, out string sheetName)
     {
         if (!path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
-            throw new NotSupportedException("µ±Ç°¹¤¾ß½öÖ§³Ö .xlsx ÎÄ¼ş£¬²»Ö§³Ö¾É°æ .xls ÎÄ¼ş¡£");
+            throw new NotSupportedException("å½“å‰å·¥å…·ä»…æ”¯æŒ .xlsx æ–‡ä»¶ï¼Œä¸æ”¯æŒæ—§ç‰ˆ .xls æ–‡ä»¶ã€‚");
 
         using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
         using (ZipArchive archive = new ZipArchive(fileStream, ZipArchiveMode.Read))
         {
             List<string> sharedStrings = ReadSharedStrings(archive);
-            XmlDocument sheet = LoadFirstWorksheet(archive);
+            XmlDocument sheet = LoadFirstWorksheet(archive, out sheetName);
             XmlNodeList cells = sheet.SelectNodes("//*[local-name()='sheetData']/*[local-name()='row']/*[local-name()='c']");
             if (cells == null || cells.Count == 0)
-                throw new InvalidDataException("Excel ÎÄ¼şÃ»ÓĞ°üº¬¿É¶ÁÈ¡µÄÊı¾İ¡£");
+                throw new InvalidDataException("Excel æ–‡ä»¶æ²¡æœ‰åŒ…å«å¯è¯»å–çš„æ•°æ®ã€‚");
 
             List<XmlNode> cellsList = cells.Cast<XmlNode>().ToList();
             Dictionary<int, string> headers = ReadRow(cellsList, 1, sharedStrings)
@@ -61,12 +60,12 @@ public static class ExcelToJson
             Dictionary<int, string> types = ReadRow(cellsList, 2, sharedStrings);
 
             if (headers.Count == 0)
-                throw new InvalidDataException("µÚÒ»ĞĞÃ»ÓĞÕÒµ½×Ö¶ÎÃû¡£");
+                throw new InvalidDataException("ç¬¬ä¸€è¡Œæ²¡æœ‰æ‰¾åˆ°å­—æ®µåç§°ã€‚");
 
             foreach (KeyValuePair<int, string> header in headers)
             {
                 if (!types.TryGetValue(header.Key, out string type) || string.IsNullOrWhiteSpace(type))
-                    throw new InvalidDataException($"×Ö¶Î \"{header.Value}\" Ã»ÓĞÔÚµÚ¶şĞĞÉùÃ÷Êı¾İÀàĞÍ¡£");
+                    throw new InvalidDataException($"å­—æ®µ \"{header.Value}\" æ²¡æœ‰åœ¨ç¬¬äºŒè¡ŒæŒ‡å®šæ•°æ®ç±»å‹ã€‚");
             }
 
             int lastRow = cellsList.Select(cell => GetRowNumber(cell.ParentNode)).DefaultIfEmpty(2).Max();
@@ -129,26 +128,30 @@ public static class ExcelToJson
             .ToList();
     }
 
-    private static XmlDocument LoadFirstWorksheet(ZipArchive archive)
+    private static XmlDocument LoadFirstWorksheet(ZipArchive archive, out string sheetName)
     {
         XmlDocument workbook = LoadXml(archive.GetEntry("xl/workbook.xml"));
         XmlNode sheet = workbook.SelectSingleNode("//*[local-name()='sheets']/*[local-name()='sheet']");
+        sheetName = sheet?.Attributes?["name"]?.Value;
+        if (string.IsNullOrWhiteSpace(sheetName))
+            throw new InvalidDataException("Excel æ–‡ä»¶ä¸­çš„ Sheet æ²¡æœ‰æœ‰æ•ˆåç§°ã€‚");
+
         string relId = sheet?.Attributes?["r:id"]?.Value;
         if (string.IsNullOrEmpty(relId))
-            throw new InvalidDataException("Excel Î´ÕÒµ½¹¤×÷±í¡£");
+            throw new InvalidDataException("Excel æœªæ‰¾åˆ°å·¥ä½œè¡¨å…³ç³»ã€‚");
 
         XmlNode rel = LoadXml(archive.GetEntry("xl/_rels/workbook.xml.rels"))
             .SelectSingleNode($"//*[local-name()='Relationship'][@Id='{relId}']");
         string target = rel?.Attributes?["Target"]?.Value;
         if (string.IsNullOrEmpty(target))
-            throw new InvalidDataException("ÎŞ·¨¶¨Î»µÚÒ»¸ö¹¤×÷±í¡£");
+            throw new InvalidDataException("æ— æ³•å®šä½ç¬¬ä¸€ä¸ªå·¥ä½œè¡¨ã€‚");
 
         return LoadXml(archive.GetEntry("xl/" + target.TrimStart('/')));
     }
 
     private static XmlDocument LoadXml(ZipArchiveEntry entry)
     {
-        if (entry == null) throw new InvalidDataException("Excel ÎÄ¼ş½á¹¹²»ÍêÕû¡£");
+        if (entry == null) throw new InvalidDataException("Excel æ–‡ä»¶ç»“æ„ä¸å®Œæ•´ã€‚");
         XmlDocument doc = new XmlDocument();
         doc.Load(entry.Open());
         return doc;
@@ -173,7 +176,7 @@ public static class ExcelToJson
         if (string.IsNullOrEmpty(value))
         {
             if (type == "enum")
-                throw new InvalidDataException($"µÚ {rowNumber} ĞĞÃ¶¾Ù×Ö¶Î \"{fieldName}\" ²»ÄÜÎª¿Õ¡£");
+                throw new InvalidDataException($"ç¬¬ {rowNumber} è¡Œæšä¸¾å­—æ®µ \"{fieldName}\" ä¸èƒ½ä¸ºç©ºã€‚");
             return type == "bool" ? false : 0;
         }
 
@@ -191,31 +194,31 @@ public static class ExcelToJson
                     return bool.Parse(value);
                 case "enum": return ParseEnum(value, rowNumber, fieldName);
                 default:
-                    throw new InvalidDataException($"²»Ö§³ÖµÄÊı¾İÀàĞÍ \"{type}\"¡£");
+                    throw new InvalidDataException($"ä¸æ”¯æŒçš„æ•°æ®ç±»å‹ \"{type}\"ã€‚");
             }
         }
         catch (FormatException e)
         {
             throw new InvalidDataException(
-                $"µÚ {rowNumber} ĞĞ×Ö¶Î \"{fieldName}\" µÄÖµ \"{value}\" ÎŞ·¨×ª»»Îª {type}¡£", e);
+                $"ç¬¬ {rowNumber} è¡Œå­—æ®µ \"{fieldName}\" çš„å€¼ \"{value}\" æ— æ³•è½¬æ¢ä¸º {type}ã€‚", e);
         }
     }
 
     private static E_DialogFuncType ParseEnum(string value, int rowNumber, string fieldName)
     {
-        // ³¢ÊÔ°´Ã¶¾ÙÃû³Æ½âÎö£¨Èç "Type1"£©
+        // å¯ä»¥æŒ‰æšä¸¾åç§°è§£æï¼Œä¾‹å¦‚ "Type1"ã€‚
         if (Enum.TryParse(value, true, out E_DialogFuncType result) && Enum.IsDefined(typeof(E_DialogFuncType), result))
             return result;
-        // ³¢ÊÔ°´Êı×Ö½âÎö£¨Èç "0" -> Type1£©
+        // å¯ä»¥æŒ‰æ•°å­—è§£ææšä¸¾ï¼Œä¾‹å¦‚ "0" -> Type1ã€‚
         if (int.TryParse(value, out int num))
         {
             if (Enum.IsDefined(typeof(E_DialogFuncType), num))
                 return (E_DialogFuncType)num;
             throw new InvalidDataException(
-                $"µÚ {rowNumber} ĞĞÃ¶¾Ù×Ö¶Î \"{fieldName}\" µÄÖµ {value} ²»ÊÇÓĞĞ§µÄ E_DialogFuncType Ã¶¾ÙÖµ¡£");
+                $"ç¬¬ {rowNumber} è¡Œæšä¸¾å­—æ®µ \"{fieldName}\" çš„å€¼ {value} ä¸æ˜¯æœ‰æ•ˆçš„ E_DialogFuncType æšä¸¾å€¼ã€‚");
         }
         throw new InvalidDataException(
-            $"µÚ {rowNumber} ĞĞÃ¶¾Ù×Ö¶Î \"{fieldName}\" µÄÖµ \"{value}\" ²»ÊÇÓĞĞ§µÄ E_DialogFuncType¡£");
+            $"ç¬¬ {rowNumber} è¡Œæšä¸¾å­—æ®µ \"{fieldName}\" çš„å€¼ \"{value}\" ä¸æ˜¯æœ‰æ•ˆçš„ E_DialogFuncTypeã€‚");
     }
 
     private static string SerializeRows(List<Dictionary<string, object>> rows)
@@ -251,7 +254,7 @@ public static class ExcelToJson
         if (value is bool b) { json.Append(b ? "true" : "false"); return; }
         if (value is Enum e) { json.Append(Convert.ToInt32(e)); return; }
         if (value is IFormattable f) { json.Append(f.ToString(null, CultureInfo.InvariantCulture)); return; }
-        throw new InvalidDataException("²»Ö§³ÖÊä³öµÄÊı¾İÀàĞÍ£º" + (value?.GetType().Name ?? "null") + "¡£");
+        throw new InvalidDataException("ä¸æ”¯æŒåºåˆ—åŒ–çš„æ•°æ®ç±»å‹ï¼š" + (value?.GetType().Name ?? "null") + "ã€‚");
     }
 
     private static void AppendJsonString(StringBuilder json, string value)

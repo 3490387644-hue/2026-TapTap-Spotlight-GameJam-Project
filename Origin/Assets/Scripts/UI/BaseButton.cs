@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(RectTransform))]
 public class BaseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler

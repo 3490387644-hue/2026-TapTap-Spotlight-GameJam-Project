@@ -18,6 +18,7 @@ public abstract class BasePanel : MonoBehaviour
     public bool isDestroy = false;
     // 防止重复点击 想着先留着 后续可能会使用
     public bool isClicked = false;
+    public bool playUIBGM = true; // 是否播放UIBGM，默认播放
 
     protected virtual void  Awake()
     {
@@ -28,6 +29,23 @@ public abstract class BasePanel : MonoBehaviour
             canvasGroup=this.AddComponent<CanvasGroup>();
         }
     }
+
+    protected virtual void OnEnable()
+    {
+        if(playUIBGM)
+        {
+            UIBgmController.OnPanelEnable();
+        }
+    }
+
+    protected virtual void OnDisable()
+    {
+        if(playUIBGM)
+        {
+            UIBgmController.OnPanelDisable();
+        }
+    }
+
     protected virtual void Start()
     {
         Init();

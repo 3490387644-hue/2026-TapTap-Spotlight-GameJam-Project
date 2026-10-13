@@ -19,7 +19,7 @@ public class AlgaeBorn : MonoBehaviour
     void Start()
     {
         //为场景上的所有绿藻生成点随机生成不同的绿藻
-        for(int i=0;i<AlgaePoint.Count;i++)
+        for(int i=GameSceneManager.Instance.GetGreenAlgaeCount;i<AlgaePoint.Count;i++)
         {
             AlgaeCreate(AlgaePoint[i]);
         }

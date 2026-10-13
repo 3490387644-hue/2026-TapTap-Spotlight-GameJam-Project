@@ -1,0 +1,14 @@
+我把中文改成英语 避免资源加载时因为路径原因出bug
+人物形态变化声——CharacterMorphSound
+发光声——GlowSound
+吸收绿藻声——GreenAlgaeAbsorbSound
+岩浆涌动声——MagmaLoopingSound
+岩石碎裂声——RockShatterSound
+撞击岩石声——RockImpactSound
+清脆敲击声——ClearTappingSound
+走动声——FootstepSound
+跳跃后落地声——LandingSound
+跳跃声——JumpSound
+过桥特殊走路声——BridgeFootstepSound
+驱除障碍声——ObstacleClearSound
+黑色障碍待机声——BlackObstacleIdleSound
