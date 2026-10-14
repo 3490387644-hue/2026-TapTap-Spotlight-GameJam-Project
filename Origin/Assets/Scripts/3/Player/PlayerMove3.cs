@@ -53,7 +53,8 @@ public class PlayerMove3 : MonoBehaviour
         if(isFly)
         {
             rb.velocity = new Vector2(h,v);
-            if(h!=0||v!=0)
+            stamina.gameObject.SetActive(true);
+            if (h!=0||v!=0)
             {
                 stamina.UpdateStaminaChange(reduceNum);
             }
@@ -87,7 +88,6 @@ public class PlayerMove3 : MonoBehaviour
             if(Time.time-lastTime>=enterFlyTime)
             {
                 isFly=true;
-                stamina.gameObject.SetActive(true);
             }
         }
     }
