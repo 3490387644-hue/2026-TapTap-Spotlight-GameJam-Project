@@ -1040,8 +1040,10 @@ MonoBehaviour:
   isFacingRight: 1
   enterFlyTime: 3
   isFly: 0
-  reduceNum: -0.3
+  reduceNum: -0.2
+  addNum: 0.3
   stamina: {fileID: 1164113406}
+  isAdd: 0
 --- !u!50 &675672358
 Rigidbody2D:
   serializedVersion: 4
