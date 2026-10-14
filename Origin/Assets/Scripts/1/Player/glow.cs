@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class glow : SingletonMono<glow>
 {
-    public Light2D light; //玩家子物体上的光源组件
+    public Light2D light1; //玩家子物体上的光源组件
 
     public bool isGlow=false; //是否允许发光
 
@@ -31,21 +31,21 @@ public class glow : SingletonMono<glow>
         {
             if(Input.GetKeyDown(KeyCode.E))
             {
-                light.gameObject.SetActive(true);
+                light1.gameObject.SetActive(true);
                 obj = Physics2D.OverlapCircle(checkPoint.position, radius, mask).gameObject;
 
             }
             if(Input.GetKey(KeyCode.E))
             {
                 lastTime += Time.deltaTime;
-                if (light.intensity >=0.5)
-                    light.intensity -= 0.001f;
-                if (light.falloffIntensity >= 0.21)
-                    light.falloffIntensity -= 0.001f;
-                if(light.pointLightOuterRadius<=2)
-                    light.pointLightOuterRadius += 0.001f;
-                if (light.pointLightInnerRadius <= 0.5)
-                    light.pointLightInnerRadius += 0.001f;
+                if (light1.intensity >=0.5)
+                    light1.intensity -= 0.001f;
+                if (light1.falloffIntensity >= 0.21)
+                    light1.falloffIntensity -= 0.001f;
+                if(light1.pointLightOuterRadius<=2)
+                    light1.pointLightOuterRadius += 0.001f;
+                if (light1.pointLightInnerRadius <= 0.5)
+                    light1.pointLightInnerRadius += 0.001f;
                 if (lastTime >= 3)
                 {
                     obj.GetComponent<blackfog>().FadeOut();
@@ -54,13 +54,13 @@ public class glow : SingletonMono<glow>
             }
             if (Input.GetKeyUp(KeyCode.E))
             {
-                light.intensity = 1;
-                light.falloffIntensity = 1;
-                light.pointLightOuterRadius = 1;
-                light.pointLightInnerRadius = 0;
+                light1.intensity = 1;
+                light1.falloffIntensity = 1;
+                light1.pointLightOuterRadius = 1;
+                light1.pointLightInnerRadius = 0;
                 obj = null;
                 lastTime = 0; //刷新持续时间
-                light.gameObject.SetActive(false);
+                light1.gameObject.SetActive(false);
             }
         }
     }

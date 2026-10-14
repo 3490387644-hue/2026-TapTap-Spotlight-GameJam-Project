@@ -17,6 +17,7 @@ public class StaminaChange : MonoBehaviour
     {
         currentNum=maxNum;
         startScaleY=spriteNum.transform.localScale.y;
+        this.gameObject.SetActive(false); //初始化之后 对象失活
     }
 
     // Update is called once per frame
@@ -33,6 +34,12 @@ public class StaminaChange : MonoBehaviour
         {
             player.GetComponent<PlayerMove3>().isFly = false; //耐力值为0时，退出飞行模式
             player.GetComponent<Rigidbody2D>().gravityScale = 1; //同时恢复重力参数
+        }
+        if(currentNum==100)
+        {
+            //耐力值满时，退出耐力值恢复状态并隐藏耐力条
+            player.GetComponent <PlayerMove3>().isAdd=false;
+            this.gameObject.SetActive(false);
         }
         float newY = ((currentNum-num) / maxNum) * startScaleY ;
         spriteNum.localScale = new Vector3(spriteNum.localScale.x, newY, spriteNum.localScale.z);
