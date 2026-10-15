@@ -27,10 +27,23 @@ public class DeadCheck : MonoBehaviour
 
     IEnumerator myCroutine(GameObject player)
     {
-        //Camera.main.DOShakePosition(0.3f, 2);
-        yield return new WaitForSeconds(3);
+        Camera.main.DOShakePosition(0.7f, 2);
+        yield return new WaitForSeconds(1);
+        //死亡一秒后清理残影对象
+        Destroy(ShadowSkill.Instance.Shadow1);
+        Destroy(ShadowSkill.Instance.Shadow2);
+        ShadowSkill.Instance.ClearShadow();
+
+        //死亡时恢复角色的耐力值
+        StaminaChange.Instance.currentNum = 100;
+
+        yield return new WaitForSeconds(2);
         player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         player.transform.position = CheckpointMgr.Instance.GetCheckPoint().transform.position;
+        if (player.transform.localScale != CheckpointMgr.Instance.GetCheckPoint().transform.localScale)
+        {
+            player.gameObject.GetComponent<PlayerMove3>().isFacingRight = !player.gameObject.GetComponent<PlayerMove3>().isFacingRight;
+        }
         player.transform.localScale=CheckpointMgr.Instance.GetCheckPoint().transform.localScale;
     }
 }
