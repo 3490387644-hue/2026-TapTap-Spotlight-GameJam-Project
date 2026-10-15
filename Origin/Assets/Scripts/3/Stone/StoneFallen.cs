@@ -20,9 +20,18 @@ public class StoneFallen : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if(collision.gameObject.tag=="Player")
+    //    {
+    //        collision.gameObject.GetComponent<PlayerMove3>().isFly = false;
+    //        collision.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;
+    //    }
+    //}
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag=="Player")
+        if (collision.gameObject.tag == "Player")
         {
             collision.gameObject.GetComponent<PlayerMove3>().isFly = false;
             collision.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;

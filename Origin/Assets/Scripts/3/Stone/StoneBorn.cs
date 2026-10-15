@@ -8,27 +8,23 @@ public class StoneBorn : MonoBehaviour
     public float hStoneSpeed; //石头横向速度
     public float vStoneSpeed; //石头竖向速度
     private GameObject stoneObj; //当前的石头对象
+    private float lastTime; //上次生成石头的时间
     // Start is called before the first frame update
     void Start()
     {
-        
+        lastTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        while(true)
+        if(Time.time-lastTime>=bornTime)
         {
-            StartCoroutine(myCoroutine());
+            stoneObj = Instantiate(ResMgr.Instance.Load<GameObject>("Prefabs/Stones/Stone"),this.transform.position,this.transform.rotation);
+            stoneObj.GetComponent<StoneFallen>().hSpeed = hStoneSpeed;
+            stoneObj.GetComponent<StoneFallen>().vSpeed = vStoneSpeed;
+            lastTime = Time.time; //更新石头生成时间
+            Destroy(stoneObj, 7);
         }
-    }
-
-    IEnumerator myCoroutine()
-    {
-        yield return new WaitForSeconds(bornTime);
-        stoneObj = Instantiate(ResMgr.Instance.Load<GameObject>("Prefabs/Stones/Stone"));
-        stoneObj.GetComponent<StoneFallen>().hSpeed = hStoneSpeed;
-        stoneObj.GetComponent<StoneFallen>().vSpeed = vStoneSpeed;
-        Destroy(stoneObj,7);
     }
 }
