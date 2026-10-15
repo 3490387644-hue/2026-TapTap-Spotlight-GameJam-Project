@@ -43,6 +43,7 @@ public class ShadowSkill : MonoBehaviour
                 Shadow1 = Instantiate(ResMgr.Instance.Load<GameObject>("Prefabs/Shadow/Shadow1"), this.transform.position, this.transform.rotation);
                 Shadow1.transform.localScale = this.transform.localScale;
                 fClick--;
+                return;
             }
             //在飞行状态且是第二次按F键时可以在原地生成残影并回到记录点的位置
             if (fClick == 1 && player.isFly)
@@ -71,7 +72,6 @@ public class ShadowSkill : MonoBehaviour
             }
             this.transform.localScale = Shadow2.transform.localScale;
             Destroy(Shadow2); //回到残影位置时把记录点销毁
-            print(1);
             ClearShadow();
         }
     }

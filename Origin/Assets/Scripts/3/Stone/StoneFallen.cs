@@ -6,7 +6,6 @@ public class StoneFallen : MonoBehaviour
 {
     public float hSpeed; //水平方向上的速度
     public float vSpeed; //竖直方向上的速度
-
     private Rigidbody2D rb; //落石身上的刚体脚本
     void Start()
     {
