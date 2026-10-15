@@ -11,8 +11,8 @@ public class ShadowSkill : MonoBehaviour
     public Vector3 offset; //范围检测点偏离原点的位置
     public float radius; //检测范围半径大小
     public LayerMask mask; //范围检测层
-    private GameObject Shadow1; //影子对象1（记录点）
-    private GameObject Shadow2; //影子对象2（残影点）
+    public GameObject Shadow1; //影子对象1（记录点）
+    public GameObject Shadow2; //影子对象2（残影点）
     private int fClick=2; //F键可点击的次数
 
     private void Awake()
@@ -77,7 +77,7 @@ public class ShadowSkill : MonoBehaviour
     }
 
     //清空影子函数
-    private void ClearShadow()
+    public void ClearShadow()
     {
         Shadow1 = null;
         Shadow2 = null;

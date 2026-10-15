@@ -5,13 +5,21 @@ using UnityEngine;
 
 public class StaminaChange : MonoBehaviour
 {
+    private static StaminaChange instance;
+    public static StaminaChange Instance=>instance;
+
     public GameObject target; //耐力条跟随的对象
     public Vector3 offset; //耐力条偏移角色的位置
     public Transform spriteNum; //耐力值数值图片
     public GameObject player;  //玩家对象
-    private float currentNum; //角色当前耐力值
+    public float currentNum; //角色当前耐力值
     private float maxNum=100; //角色最大耐力值
     private float startScaleY; //耐力条的初始缩放Y值
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
