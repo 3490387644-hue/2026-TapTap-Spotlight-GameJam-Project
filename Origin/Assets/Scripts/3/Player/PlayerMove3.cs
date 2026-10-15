@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerMove3 : MonoBehaviour
 {
+    private static PlayerMove3 instance;
+    public static PlayerMove3 Instance=>instance;
+
     public float hSpeed; //玩家对象水平方向的速度
     public float vSpeed; //玩家竖直方向的速度
 
@@ -15,11 +18,17 @@ public class PlayerMove3 : MonoBehaviour
 
     public StaminaChange stamina; //耐力条对象
     public bool isAdd; //是否进入耐力恢复状态
+    public bool isStop=true; //是否处于停止状态
 
     private Rigidbody2D rb; //玩家对象上的刚体
     private float h; //记录水平方向的输入量
     private float v; //记录竖直方向的输入量
     private float lastTime; //按下W键时记录当前游戏时间
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -57,6 +66,11 @@ public class PlayerMove3 : MonoBehaviour
             if (h!=0||v!=0)
             {
                 stamina.UpdateStaminaChange(reduceNum);
+                isStop=false;
+            }
+            if(h==0&&v==0)
+            {
+                isStop=true;
             }
         }
         else

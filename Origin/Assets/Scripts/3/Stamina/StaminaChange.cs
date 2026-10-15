@@ -43,7 +43,7 @@ public class StaminaChange : MonoBehaviour
             player.GetComponent<PlayerMove3>().isFly = false; //耐力值为0时，退出飞行模式
             player.GetComponent<Rigidbody2D>().gravityScale = 1; //同时恢复重力参数
         }
-        if(currentNum==100)
+        if(currentNum==100&&!player.GetComponent<PlayerMove3>().isFly)
         {
             //耐力值满时，退出耐力值恢复状态并隐藏耐力条
             player.GetComponent <PlayerMove3>().isAdd=false;
