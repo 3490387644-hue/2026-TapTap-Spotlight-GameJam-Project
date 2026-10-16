@@ -10,5 +10,7 @@ public enum E_EventType
     SoundValueChanged, // 音效变化时触发
     DialogDoing,
     DialogType,
-    MagmaTrigger
+    MagmaTrigger,
+    NPCTrigger,
+    MechanismTrigger
 }

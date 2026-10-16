@@ -29,7 +29,7 @@ public class UIBgmController
                 isPlaying = false;
                 // 只有身处游戏场景才恢复游戏音乐，菜单里不恢复
                 E_SceneType scene = GameSceneManager.Instance.currentSceneType;
-                if (scene == E_SceneType.GameScene1 || scene == E_SceneType.GameScene2)
+                if (scene == E_SceneType.GameScene01 || scene == E_SceneType.GameScene02)
                 {
                     GameSceneManager.Instance.PlayMusicByTriggerType(GameSceneManager.Instance.currentMusicTriggerType);
                 }

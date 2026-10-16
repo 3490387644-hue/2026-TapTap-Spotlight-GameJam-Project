@@ -16,5 +16,11 @@
     "Text": "按“S”键撞碎黑色障碍",
     "Type": 1,
     "HasTriggered": false
+  },
+  {
+    "ID": 3,
+    "Text": "按“E”键发光驱散黑色障碍",
+    "Type": 1,
+    "HasTriggered": false
   }
 ]

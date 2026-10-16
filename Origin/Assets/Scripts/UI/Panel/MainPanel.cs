@@ -30,7 +30,7 @@ public class MainPanel : BasePanel
     {
         base.OnEnable();
         GameDataMgr.Instance.Init(); // 确保游戏数据已初始化
-        pIndex = GameDataMgr.Instance.gameData.hasSaveData ? 1 : 0;
+        pIndex = GameDataMgr.Instance.gameData1.hasSaveData ? 1 : 0;
         for(int i = 0; i < mainPanels.Length; i++)
         {
             mainPanels[i].SetActive(i == pIndex);
@@ -65,7 +65,7 @@ public class MainPanel : BasePanel
     {
         Debug.Log("开始游戏");
         UIManager.Instance.HidePanel<MainPanel>();
-        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene1, () =>
+        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene01, () =>
         {
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type1, 0, "");
             GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter1_Level1);
@@ -77,9 +77,9 @@ public class MainPanel : BasePanel
         Debug.Log("继续游戏");
         GameDataMgr.Instance.Init(); // 重新加载存档数据，确保对话触发状态正确
         UIManager.Instance.HidePanel<MainPanel>();
-        GameSceneManager.Instance.LoadScene(GameDataMgr.Instance.gameData.sceneType, ()=>
+        GameSceneManager.Instance.LoadScene(GameDataMgr.Instance.globalGameData.sceneType, ()=>
         {
-            GameSceneManager.Instance.PlayMusicByTriggerType(GameDataMgr.Instance.gameData.currentMusicTriggerType);
+            GameSceneManager.Instance.PlayMusicByTriggerType(GameDataMgr.Instance.globalGameData.currentMusicTriggerType);
         });
         // UIManager.Instance.HidePanel<MainPanel>(true, (panel)=>
         // {

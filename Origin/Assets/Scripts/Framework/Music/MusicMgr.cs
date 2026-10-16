@@ -39,10 +39,10 @@ public class MusicMgr : BaseManager<MusicMgr>
     // 更新音乐和音效的值
     public void UpdateData()
     {
-        if(!GameDataMgr.Instance.gameData.hasSaveData)
+        if(!GameDataMgr.Instance.gameData1.hasSaveData)
             return; // 如果没有存档数据 就不更新音乐和音效的值 直接使用默认值
-        bkMusicValue = GameDataMgr.Instance.gameData.musicData.musicVolume;
-        soundValue = GameDataMgr.Instance.gameData.musicData.soundVolume;
+        bkMusicValue = GameDataMgr.Instance.globalGameData.musicData.musicVolume;
+        soundValue = GameDataMgr.Instance.globalGameData.musicData.soundVolume;
         EventCenter.Instance.EventTrigger<float>(E_EventType.SoundValueChanged, soundValue);
     }
 

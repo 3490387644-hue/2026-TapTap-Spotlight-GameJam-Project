@@ -14,26 +14,38 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     public E_MusicTriggerType currentMusicTriggerType = E_MusicTriggerType.Chapter1_Level1; // 当前触发的音乐类型
     public GameObject player; // 玩家对象
     public E_SceneType currentSceneType; // 当前场景类型
+    #region 第一章数据
     private int greenAlgaeCount = 0; // 收集到的绿藻数量
     public int GetGreenAlgaeCount { get { return greenAlgaeCount; } } // 获取收集到的绿藻数量
     private List<DialogData> sceneObjectCollisionDialogData = new List<DialogData>(); // 场景物体碰撞触发的对话数据列表
+    public List<DialogData> GetSceneObjectCollisionDialogData { get { return sceneObjectCollisionDialogData; } } // 获取场景物体碰撞触发的对话数据列表
     private List<RockData> sceneRockDataList = new List<RockData>(); // 场景岩石数据列表
     public List<RockData> GetSceneRockDataList { get { return sceneRockDataList; } } // 获取场景岩石数据列表
+    private List<BlackFogData> blackFogDataList = new List<BlackFogData>(); // 场景黑雾数据列表
+    public List<BlackFogData> GetBlackFogDataList { get { return blackFogDataList; } } // 获取场景黑雾数据列表
     private E_PlayerState playerState = E_PlayerState.Normal; // 玩家状态
     public E_PlayerState GetPlayerState { get { return playerState; } } // 获取玩家状态
     private CheckPointData checkPointData = new CheckPointData(); // 回溯点数据
     public CheckPointData GetCheckPointData { get { return checkPointData; } } // 获取回溯点数据
+    #endregion
+
+    #region 第四章数据
+    private List<NPC> npcList = new List<NPC>(); // 场景NPC列表
+    public List<NPC> GetNPCList { get { return npcList; } } // 获取场景NPC列表
+    private List<Mechanism> mechanismList = new List<Mechanism>(); // 场景机关列表
+    public List<Mechanism> GetMechanismList { get { return mechanismList; } } // 获取场景机关列表
+    #endregion
 
     public void LoadScene(E_SceneType sceneType, UnityAction callback = null)
     {
         currentSceneType = sceneType;
-        UIManager.Instance.ShowPanelAsync<LoadingPanel>((panel)=>
+        UIManager.Instance.ShowPanelAsync<LoadingPanel>((panel) =>
         {
             panel.InitProgress(sceneType, callback);
         });
     }
-    
-    public void UpdateAllInfo(E_MusicTriggerType triggerType, int greenAlgaeCount, List<DialogData> dialogDataList, List<RockData> rockDataList, E_PlayerState playerState, CheckPointData checkPointData)
+
+    public void UpdateAllInfo1(E_MusicTriggerType triggerType, int greenAlgaeCount, List<DialogData> dialogDataList, List<RockData> rockDataList, E_PlayerState playerState, CheckPointData checkPointData, List<BlackFogData> blackFogDataList)
     {
         this.UpdateCurrentMusicTriggerType(triggerType);
         this.UpdateGreenAlgaeCount(greenAlgaeCount);
@@ -41,6 +53,12 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
         this.UpdateSceneRockDataList(rockDataList);
         this.UpdatePlayerState(playerState);
         this.UpdateCheckPointData(checkPointData);
+        this.UpdateBlackFogDataList(blackFogDataList);
+    }
+
+    public void UpdateBlackFogDataList(List<BlackFogData> blackFogDataList)
+    {
+        this.blackFogDataList = blackFogDataList;
     }
 
     public void UpdateCheckPointData(CheckPointData checkPointData)
@@ -76,15 +94,15 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     public void OnGreenAlgaeCollected()
     {
         greenAlgaeCount++;
-        if(greenAlgaeCount == 1)
+        if (greenAlgaeCount == 1)
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 6, sceneObjectCollisionDialogData[2].Text);
-        else if(greenAlgaeCount == 2)
+        else if (greenAlgaeCount == 2)
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 7, sceneObjectCollisionDialogData[3].Text);
-        else if(greenAlgaeCount == 3)
+        else if (greenAlgaeCount == 3)
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 8, sceneObjectCollisionDialogData[4].Text);
-        else if(greenAlgaeCount == 4)
+        else if (greenAlgaeCount == 4)
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 9, sceneObjectCollisionDialogData[5].Text);
-        else if(greenAlgaeCount == 5)
+        else if (greenAlgaeCount == 5)
             DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 10, sceneObjectCollisionDialogData[6].Text);
     }
 
@@ -105,9 +123,9 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
         }
     }
 
-    public void PlaySoundByTriggerType(E_SoundTriggerType triggerType, bool isLoop = false, bool isAsync = false ,UnityAction<AudioSource> callback = null)
+    public void PlaySoundByTriggerType(E_SoundTriggerType triggerType, bool isLoop = false, bool isAsync = false, UnityAction<AudioSource> callback = null)
     {
-        switch(triggerType)
+        switch (triggerType)
         {
             case E_SoundTriggerType.MagmaSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "MagmaLoopingSound", isLoop, isAsync, callback);
@@ -132,17 +150,17 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
 
     public void GeneratePlayer(E_SceneType type, Vector3 position)
     {
-        switch(type)
+        switch (type)
         {
-            case E_SceneType.GameScene1:
+            case E_SceneType.GameScene01:
                 GameObject playerObj = Instantiate(ResMgr.Instance.Load<GameObject>(PathUtil.PlayerPath + "Player1"));
                 player = playerObj;
-                playerObj.transform.position = GameDataMgr.Instance.gameData.playerData.playerPos != null 
-                ? new Vector3(GameDataMgr.Instance.gameData.playerData.playerPos._x, 
-                GameDataMgr.Instance.gameData.playerData.playerPos._y,
-                GameDataMgr.Instance.gameData.playerData.playerPos._z) 
+                playerObj.transform.position = GameDataMgr.Instance.gameData1.playerData.playerPos != null
+                ? new Vector3(GameDataMgr.Instance.gameData1.playerData.playerPos._x,
+                GameDataMgr.Instance.gameData1.playerData.playerPos._y,
+                GameDataMgr.Instance.gameData1.playerData.playerPos._z)
                 : position;
-                ChangePlayerScale(GameDataMgr.Instance.gameData.playerData.playerState);
+                ChangePlayerScale(GameDataMgr.Instance.gameData1.playerData.playerState);
                 break;
         }
     }
@@ -154,7 +172,7 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
 
     public void ChangePlayerScale(E_PlayerState state)
     {
-        switch(state)
+        switch (state)
         {
             case E_PlayerState.Normal:
                 player.transform.localScale = new Vector3(0.2f, 0.2f, 1);
@@ -165,5 +183,20 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
                 player.GetComponent<CharacterController2D>().jumpForce = 500;
                 break;
         }
+    }
+
+    public void UpdateBlackFogDataList(int ID)
+    {
+        blackFogDataList[ID].isDestroyed = true;
+    }
+
+    public void UpdateNPCState(int npcID)
+    {
+        NPC npc = npcList.Find(n => n.npcID == npcID);
+        if (npc.talkNum > 0)
+            npc.talkNum--; // 交互次数减1
+
+        if (npc != null && npc.talkNum <= 0)
+            npc.canTalk = false; // 如果交互次数为0，则设置为不能交互
     }
 }

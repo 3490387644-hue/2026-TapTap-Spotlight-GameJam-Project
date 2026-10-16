@@ -40,5 +40,17 @@
     "Text": "我好像变大了一圈",
     "Type": 1,
     "HasTriggered": false
+  },
+  {
+    "ID": 7,
+    "Text": "按“E”键拿取火把",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 8,
+    "Text": "长按3秒“Q”键打开通道",
+    "Type": 1,
+    "HasTriggered": false
   }
 ]
