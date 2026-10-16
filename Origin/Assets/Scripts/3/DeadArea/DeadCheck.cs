@@ -28,6 +28,7 @@ public class DeadCheck : MonoBehaviour
     IEnumerator myCroutine(GameObject player)
     {
         Camera.main.DOShakePosition(0.7f, 2);
+        DeadChange.Instance.DarkChange();
         yield return new WaitForSeconds(1);
         //死亡一秒后清理残影对象
         Destroy(ShadowSkill.Instance.Shadow1);
