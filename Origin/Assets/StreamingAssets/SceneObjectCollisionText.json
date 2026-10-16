@@ -52,5 +52,11 @@
     "Text": "长按3秒“Q”键打开通道",
     "Type": 1,
     "HasTriggered": false
+  },
+  {
+    "ID": 9,
+    "Text": "长按两秒“W”键可进入飞行状态，飞行会消耗体力值，该关卡不设置跳跃键",
+    "Type": 1,
+    "HasTriggered": false
   }
 ]

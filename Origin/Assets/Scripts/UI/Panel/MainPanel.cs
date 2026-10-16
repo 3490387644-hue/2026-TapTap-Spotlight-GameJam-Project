@@ -44,15 +44,6 @@ public class MainPanel : BasePanel
     /// </summary>
     private void UpdateInfoBySaveData()
     {
-        // switch(pIndex)
-        // {
-        //     case 0:
-        //         UpdatePanel1Info();
-        //         break;
-        //     case 1:
-        //         UpdatePanel2Info();
-        //         break;
-        // }
         buttonDic["StartButton"].onClick.AddListener(OnClickStartButton);
         buttonDic["SettingButton"].onClick.AddListener(OnClickSettingButton);
         buttonDic["QuitButton"].onClick.AddListener(OnClickQuitButton);
@@ -65,10 +56,11 @@ public class MainPanel : BasePanel
     {
         Debug.Log("¿ªÊ¼ÓÎÏ·");
         UIManager.Instance.HidePanel<MainPanel>();
-        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene01, () =>
+        E_SceneType sceneType = GameDataMgr.Instance.globalGameData.sceneType == E_SceneType.None ? E_SceneType.GameScene01 : GameDataMgr.Instance.globalGameData.sceneType;
+        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene03, () =>
         {
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type1, 0, "");
-            GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter1_Level1);
+            DialogManager.Instance.ShowType1Dialog(1);
+            GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter3_Level1);
         });
     }
 

@@ -37,6 +37,9 @@ public class LoadingPanel : BasePanel
         MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter1 + "1-1");
         MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter1 + "1-2");
         MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter1 + "1-3");
+        MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter3 + "3-1");
+        MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter3 + "3-2");
+        MusicMgr.Instance.PreloadBKMusic(PathUtil.MusicPathOfChapter3 + "3-3");
 
         StartCoroutine(LoadScene(resPath, callback));
     }
@@ -87,7 +90,7 @@ public class LoadingPanel : BasePanel
 
         if (remainingTime > 0f)
         {
-            yield return new WaitForSecondsRealtime(remainingTime + 1f);
+            yield return new WaitForSecondsRealtime(remainingTime + 0.5f);
         }
 
         SetProgress(1f);

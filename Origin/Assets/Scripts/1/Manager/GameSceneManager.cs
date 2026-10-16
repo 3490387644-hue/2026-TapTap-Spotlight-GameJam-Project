@@ -29,11 +29,16 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     public CheckPointData GetCheckPointData { get { return checkPointData; } } // 获取回溯点数据
     #endregion
 
+    #region 第三章数据
+    private StoneData stoneData = new StoneData(); // 石头和藤蔓数据
+    public StoneData GetStoneData { get { return stoneData; } } // 获取石头和藤蔓数据
+    #endregion
+
     #region 第四章数据
     private List<NPC> npcList = new List<NPC>(); // 场景NPC列表
     public List<NPC> GetNPCList { get { return npcList; } } // 获取场景NPC列表
-    private List<Mechanism> mechanismList = new List<Mechanism>(); // 场景机关列表
-    public List<Mechanism> GetMechanismList { get { return mechanismList; } } // 获取场景机关列表
+    private List<MechanismData> mechanismList = new List<MechanismData>(); // 场景机关列表
+    public List<MechanismData> GetMechanismDataList { get { return mechanismList; } } // 获取场景机关列表
     #endregion
 
     public void LoadScene(E_SceneType sceneType, UnityAction callback = null)
@@ -45,25 +50,29 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
         });
     }
 
-    public void UpdateAllInfo1(E_MusicTriggerType triggerType, int greenAlgaeCount, List<DialogData> dialogDataList, List<RockData> rockDataList, E_PlayerState playerState, CheckPointData checkPointData, List<BlackFogData> blackFogDataList)
+    public void UpdateGlobalInfo(E_MusicTriggerType triggerType, CheckPointData checkPointData)
     {
         this.UpdateCurrentMusicTriggerType(triggerType);
+        this.UpdateCheckPointData(checkPointData);
+    }
+    public void UpdateCheckPointData(CheckPointData checkPointData)
+    {
+        this.checkPointData = checkPointData;
+    }
+
+    #region 第一章数据更新方法
+    public void UpdateChapter1Info(int greenAlgaeCount, List<DialogData> dialogDataList, List<RockData> rockDataList, E_PlayerState playerState, List<BlackFogData> blackFogDataList)
+    {
         this.UpdateGreenAlgaeCount(greenAlgaeCount);
         this.UpdateSceneObjectCollisionDialogData(dialogDataList);
         this.UpdateSceneRockDataList(rockDataList);
         this.UpdatePlayerState(playerState);
-        this.UpdateCheckPointData(checkPointData);
         this.UpdateBlackFogDataList(blackFogDataList);
     }
 
     public void UpdateBlackFogDataList(List<BlackFogData> blackFogDataList)
     {
         this.blackFogDataList = blackFogDataList;
-    }
-
-    public void UpdateCheckPointData(CheckPointData checkPointData)
-    {
-        this.checkPointData = checkPointData;
     }
 
     public void UpdatePlayerState(E_PlayerState state)
@@ -90,20 +99,37 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     {
         sceneRockDataList = rockDataList;
     }
+    #endregion
 
+    #region 第三章数据更新方法
+    public void UpdateChapter3Info(StoneData stoneData)
+    {
+        UpdateStoneData(stoneData);
+    }
+
+    public void UpdateStoneData(StoneData stoneData)
+    {
+        this.stoneData = stoneData;
+    }
+    #endregion
+
+    public void UpdateMechanismDataList(List<MechanismData> mechanismDataList)
+    {
+        this.mechanismList = mechanismDataList;
+    }
     public void OnGreenAlgaeCollected()
     {
         greenAlgaeCount++;
         if (greenAlgaeCount == 1)
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 6, sceneObjectCollisionDialogData[2].Text);
+            DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 2);
         else if (greenAlgaeCount == 2)
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 7, sceneObjectCollisionDialogData[3].Text);
+            DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 3);
         else if (greenAlgaeCount == 3)
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 8, sceneObjectCollisionDialogData[4].Text);
+            DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 4);
         else if (greenAlgaeCount == 4)
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 9, sceneObjectCollisionDialogData[5].Text);
+            DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 5);
         else if (greenAlgaeCount == 5)
-            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 10, sceneObjectCollisionDialogData[6].Text);
+            DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 6);
     }
 
     public void PlayMusicByTriggerType(E_MusicTriggerType triggerType)
@@ -119,6 +145,24 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
                 break;
             case E_MusicTriggerType.Chapter1_Level3:
                 MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter1 + "1-3");
+                break;
+            case E_MusicTriggerType.Chapter2_Level1:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter2 + "2-1");
+                break;
+            case E_MusicTriggerType.Chapter2_Level2:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter2 + "2-2");
+                break;
+            case E_MusicTriggerType.Chapter2_Level3:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter2 + "2-3");
+                break;
+            case E_MusicTriggerType.Chapter3_Level1:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter3 + "3-1");
+                break;
+            case E_MusicTriggerType.Chapter3_Level2:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter3 + "3-2");
+                break;
+            case E_MusicTriggerType.Chapter3_Level3:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter3 + "3-3");
                 break;
         }
     }
@@ -161,6 +205,18 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
                 GameDataMgr.Instance.gameData1.playerData.playerPos._z)
                 : position;
                 ChangePlayerScale(GameDataMgr.Instance.gameData1.playerData.playerState);
+                break;
+            case E_SceneType.GameScene02:
+                break;
+            case E_SceneType.GameScene03:
+                GameObject playerObj3 = Instantiate(ResMgr.Instance.Load<GameObject>(PathUtil.PlayerPath + "Player3"));
+                player = playerObj3;
+                playerObj3.transform.position = GameDataMgr.Instance.gameData3.playerData.playerPos != null
+                ? new Vector3(GameDataMgr.Instance.gameData3.playerData.playerPos._x,
+                GameDataMgr.Instance.gameData3.playerData.playerPos._y,
+                GameDataMgr.Instance.gameData3.playerData.playerPos._z)
+                : position;
+                player.transform.localScale = new Vector3(-0.3f, 0.3f, 1);
                 break;
         }
     }

@@ -21,11 +21,11 @@ public class Mechanism : MonoBehaviour
         animator = GetComponent<Animator>(); // 获取动画组件
         dialogText = GameSceneManager.Instance.GetSceneObjectCollisionDialogData[8].Text; // 获取对话文本
         EventCenter.Instance.AddEventListener<bool>(E_EventType.MechanismTrigger, OnMechanismTriggered);
-        Mechanism mechanism = GameSceneManager.Instance.GetMechanismList.Find(m => m.mechanismID == mechanismID);
+        MechanismData mechanism = GameSceneManager.Instance.GetMechanismDataList.Find(m => m.mechanismID == mechanismID);
         if (mechanism == null)
         {
             isOpen = false; // 默认机关未打开
-            GameSceneManager.Instance.GetMechanismList.Add(this); // 将当前机关添加到场景管理器的机关列表中
+            GameSceneManager.Instance.GetMechanismDataList.Add(new MechanismData { mechanismID = mechanismID, isOpen = isOpen }); // 将当前机关添加到场景管理器的机关数据列表中
         }
         else
             Init(mechanism);
@@ -48,7 +48,7 @@ public class Mechanism : MonoBehaviour
         }   
     }
 
-    private void Init(Mechanism mechanism)
+    private void Init(MechanismData mechanism)
     {
         isOpen = mechanism.isOpen; // 更新机关的打开状态
         if (isOpen)

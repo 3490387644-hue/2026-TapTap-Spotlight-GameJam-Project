@@ -9,6 +9,13 @@ public enum E_MusicTriggerType
     Chapter1_Level1, // 第一章第一关
     Chapter1_Level2, // 第一章第二关
     Chapter1_Level3, // 第一章第三关
+    Chapter2_Level1, // 第二章第一关
+    Chapter2_Level2, // 第二章第二关
+    Chapter2_Level3, // 第二章第三关
+    Chapter3_Level1, // 第三章第一关
+    Chapter3_Level2, // 第三章第二关
+    Chapter3_Level3, // 第三章第三关
+    Chapter4_Level1, // 第四章整体音乐
 }
 
 public enum E_SoundTriggerType
@@ -32,6 +39,7 @@ public class GlobalGameData
     public E_SceneType sceneType = E_SceneType.BeginScene; // 场景类型
     public MusicData musicData = new MusicData(); // 音乐和音效数据
     public E_MusicTriggerType currentMusicTriggerType; // 当前播放的背景音乐类型
+    public CheckPointData checkPointData = new CheckPointData(); // 回溯点数据
 }
 
 /// <summary>
@@ -45,7 +53,6 @@ public class GameData1
     public int greenAlgaeCollectedCount; // 已经收集的绿藻数量
     public PlayerData1 playerData = new PlayerData1(); // 玩家数据
     public List<RockData> rockDataList = new List<RockData>(); // 特殊岩石数据列表
-    public CheckPointData checkPointData = new CheckPointData(); // 回溯点数据
     public List<BlackFogData> blackFogDataList = new List<BlackFogData>(); // 黑雾数据列表
 }
 
@@ -121,6 +128,36 @@ public class PositionData
     }
 
 }
+#region 第三关数据
+/// <summary>
+/// 场景3的游戏存档数据类
+/// </summary>
+[System.Serializable]
+public class GameData3
+{
+    public bool hasSaveData = false; // 是否有存档数据
+    public PlayerData3 playerData = new PlayerData3(); // 玩家数据
+    public StoneData stoneData = new StoneData(); // 石头和藤蔓数据
+}
+
+/// <summary>
+/// 场景3的玩家数据类
+/// </summary>
+[System.Serializable]
+public class PlayerData3
+{
+    public PositionData playerPos; // 玩家位置数据
+}
+
+/// <summary>
+/// 岩石数据类
+/// </summary>
+[System.Serializable]
+public class StoneData
+{
+    public bool isStoneFallen; // 石头是否已经掉落
+}
+#endregion
 
 /// <summary>
 /// 第四章场景机关数据类

@@ -18,6 +18,14 @@ public class PathUtil : MonoBehaviour
     /// </summary>
     public static string MusicPathOfChapter1 = "Music/Chapter1/Music/";
     /// <summary>
+    /// 第二章音乐路径
+    /// </summary>
+    public static string MusicPathOfChapter2 = "Music/Chapter2/Music/";
+    /// <summary>
+    /// 第三章音乐路径
+    /// </summary>
+    public static string MusicPathOfChapter3 = "Music/Chapter3/Music/";
+    /// <summary>
     /// 打印机文本路径
     /// </summary>
     public static string TypewritterTextPath = Application.persistentDataPath + "/TypewritterText.json";

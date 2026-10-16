@@ -8,7 +8,7 @@ public class DialogManager : SingletonAutoMono<DialogManager>
     private bool isDialogFinished = false; // 对话是否结束
     private int nowDialogIndex; // 当前对话索引
     private List<DialogData> dialogData = new List<DialogData>();
-    // private List<int> 
+    // private List<int>
     private DialogPanel dialogPanel; // 对话面板引用
     private UnityAction onDialogFinished; // 对话结束时的回调函数
     private float elapsedTime = 0f;
@@ -21,59 +21,55 @@ public class DialogManager : SingletonAutoMono<DialogManager>
         nowDialogIndex = 0;
     }
 
-    public void ShowDialogPanel(E_DialogFuncType type, int dialogIndex, string text, int dialogCount = 1)
+    // 类型1：一定触发-打字机式对话
+    public void ShowType1Dialog(int dialogIndex, int dialogCount = 1)
     {
         UIManager.Instance.ShowPanelAsync<DialogPanel>((panel)=>
         {
             Debug.Log("DialogPanel loaded and shown");
             if(dialogPanel == null)
                 dialogPanel = panel;
-            this.UpdateText(type, dialogIndex, dialogCount, text);
+            dialogPanel.dialogImage1.gameObject.SetActive(true);
+            dialogPanel.dialogText1.gameObject.SetActive(true);
+            dialogPanel.type2Group.gameObject.SetActive(false);
+            dialogPanel.tip1.gameObject.SetActive(false);
+            dialogPanel.dialogText1.text = ""; // 清空之前的文本
+            if(type1Coroutine != null)
+                StopCoroutine(type1Coroutine);
+            type1Coroutine = StartCoroutine(LoadTextByType1(dialogIndex, dialogCount));
         });
     }
 
-    public void UpdateText(E_DialogFuncType type, int dialogIndex, int dialogCount, string text)
+    // 类型2：一定触发-触碰碰撞体后触发式对话，根据 dataType 和索引从对应数据列表读取文本
+    public void ShowType2Dialog(E_DialogDataType dataType, int dialogIndex, int dialogCount = 1)
     {
-        switch (type)
+        UIManager.Instance.ShowPanelAsync<DialogPanel>((panel)=>
         {
-            case E_DialogFuncType.Type1:
-                dialogPanel.dialogImage1.gameObject.SetActive(true);
-                dialogPanel.dialogText1.gameObject.SetActive(true);
-                dialogPanel.type2Group.gameObject.SetActive(false);
-                dialogPanel.tip1.gameObject.SetActive(false);
-                dialogPanel.dialogText1.text = ""; // 清空之前的文本
-                if(type1Coroutine != null)
-                    StopCoroutine(type1Coroutine);
-                type1Coroutine = StartCoroutine(LoadTextByType1(type, dialogIndex, dialogCount));
-                break;
-            case E_DialogFuncType.Type2:
-                dialogPanel.dialogImage1.gameObject.SetActive(false);
-                dialogPanel.dialogText1.gameObject.SetActive(false);
-                dialogPanel.type2Group.gameObject.SetActive(true);
-                dialogPanel.tip1.gameObject.SetActive(false);
-                dialogPanel.dialogText2.text = ""; // 清空之前的文本
-                if(type2Coroutine != null)
-                    StopCoroutine(type2Coroutine);
-                type2Coroutine = StartCoroutine(LoadTextByType2(type, text));
-                break;
-        }
+            Debug.Log("DialogPanel loaded and shown");
+            if(dialogPanel == null)
+                dialogPanel = panel;
+            dialogPanel.dialogImage1.gameObject.SetActive(false);
+            dialogPanel.dialogText1.gameObject.SetActive(false);
+            dialogPanel.type2Group.gameObject.SetActive(true);
+            dialogPanel.tip1.gameObject.SetActive(false);
+            dialogPanel.dialogText2.text = ""; // 清空之前的文本
+            if(type2Coroutine != null)
+                StopCoroutine(type2Coroutine);
+            type2Coroutine = StartCoroutine(LoadTextByType2(dataType, dialogIndex, dialogCount));
+        });
     }
 
-    // 根据对话类型加载对应功能的文本
-    IEnumerator LoadTextByType1(E_DialogFuncType type, int dialogIndex, int dialogCount)
+    // 打字机式对话协程
+    IEnumerator LoadTextByType1(int dialogIndex, int dialogCount)
     {
         nowDialogIndex = dialogIndex;
-        if(type != E_DialogFuncType.Type1)
-        {
-            Debug.Log("对话文本类型出错：Type1->Type2");
-            yield break;
-        }
         EventCenter.Instance.EventTrigger<bool>(E_EventType.DialogDoing, false); // 禁止玩家移动
         yield return new WaitForSeconds(1f); // 等待0.5秒后开始显示对话
         isDialogFinished = false;
         E_DialogFuncType dialogType;
         while (dialogCount > 0)
         {
+            GameDataMgr.Instance.sceneObjectCollisionDialogData[nowDialogIndex].HasTriggered = true; // 标记当前文本已触发
             dialogType = (E_DialogFuncType)GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].Type;
             if (dialogType != E_DialogFuncType.Type1)
             {
@@ -108,45 +104,80 @@ public class DialogManager : SingletonAutoMono<DialogManager>
             isDialogFinished = true;
             // UIManager.Instance.ShowPanelAsync<MainPanel>();
             // // 回调函数
-            if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[0].HasTriggered)
-            {
-                DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 0, GameDataMgr.Instance.sceneObjectCollisionDialogData[0].Text);
-                GameDataMgr.Instance.sceneObjectCollisionDialogData[0].HasTriggered = true; // 更新触发状态
-            }
+            ShowFirstDialogAfterEnterScene();
             EventCenter.Instance.EventTrigger<bool>(E_EventType.DialogDoing, true); // 允许玩家移动
         });
     }
 
-    // 触发式对话
-    IEnumerator LoadTextByType2(E_DialogFuncType type, string text)
+    private void ShowFirstDialogAfterEnterScene()
     {
-        if(type == E_DialogFuncType.Type1)
+        E_SceneType currentScene = GameSceneManager.Instance.currentSceneType;
+        switch(currentScene)
         {
-            Debug.Log("对话文本类型出错：Type2or3->Type1");
+            case E_SceneType.GameScene01:
+                if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[0].HasTriggered)
+                {
+                    DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 0);
+                }
+                break;
+            case E_SceneType.GameScene03:
+                if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[9].HasTriggered)
+                {
+                    DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 9);
+                }
+                break;
+        }
+    }
+
+    // 触发式对话（支持按 dialogCount 连续播放多条文本）
+    IEnumerator LoadTextByType2(E_DialogDataType dataType, int dialogIndex, int dialogCount)
+    {
+        List<DialogData> dataList = GetDialogDataList(dataType);
+        if(dataList == null)
+        {
+            Debug.LogWarning("对话数据类型无效：" + dataType);
             yield break;
         }
-        elapsedTime = 0f; // 重置计时器
-        duration = 2.5f; // 对话显示持续时间
-        dialogPanel.type2Group.alpha = 1f;
 
-        dialogPanel.dialogText2.text = text;
-        Debug.Log($"对话内容：" + text);
-        yield return new WaitForSeconds(2.5f); // 等待2.5秒后隐藏对话面板
-
-        while (elapsedTime < duration)
+        int index = dialogIndex;
+        while (dialogCount > 0)
         {
-            elapsedTime += Time.deltaTime;
+            if(index < 0 || index >= dataList.Count)
+            {
+                Debug.LogWarning($"对话索引越界：{index}，数据数量：{dataList.Count}");
+                break;
+            }
+            DialogData data = dataList[index];
+            data.HasTriggered = true; // 标记当前文本已触发
 
-            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
-            dialogPanel.type2Group.alpha = alpha;
+            // 以下为 Type2 的文本出现形式（淡入淡出）
+            elapsedTime = 0f; // 重置计时器
+            duration = 2.5f; // 对话显示持续时间
+            dialogPanel.type2Group.alpha = 1f;
+            dialogPanel.type2Group.gameObject.SetActive(true);
 
-            yield return null;
+            dialogPanel.dialogText2.text = data.Text;
+            Debug.Log($"对话内容：" + data.Text);
+            yield return new WaitForSeconds(2.5f); // 等待2.5秒后隐藏对话面板
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+                dialogPanel.type2Group.alpha = alpha;
+
+                yield return null;
+            }
+
+            dialogPanel.type2Group.alpha = 0f;
+            dialogPanel.dialogText2.text = "";
+
+            index++;
+            dialogCount--;
         }
 
-        dialogPanel.type2Group.alpha = 0f;
         dialogPanel.type2Group.gameObject.SetActive(false);
-
-        dialogPanel.dialogText2.text = "";
         elapsedTime = 0f; // 重置计时器
         UIManager.Instance.HidePanel<DialogPanel>(true, (panel) =>
         {
@@ -155,5 +186,20 @@ public class DialogManager : SingletonAutoMono<DialogManager>
             // 回调函数
 
         });
+    }
+
+    // 根据对话数据类型返回对应的对话数据列表
+    private List<DialogData> GetDialogDataList(E_DialogDataType dataType)
+    {
+        switch(dataType)
+        {
+            case E_DialogDataType.SceneObjectCollisionText:
+                return GameDataMgr.Instance.sceneObjectCollisionDialogData;
+            case E_DialogDataType.AirwallTriggerText:
+                return GameDataMgr.Instance.airwallTriggerDialogData;
+            default:
+                Debug.LogWarning("未知的对话数据类型：" + dataType);
+                return null;
+        }
     }
 }

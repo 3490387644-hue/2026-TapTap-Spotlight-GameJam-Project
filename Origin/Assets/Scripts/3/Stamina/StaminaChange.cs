@@ -13,7 +13,7 @@ public class StaminaChange : MonoBehaviour
     public Transform spriteNum; //耐力值数值图片
     public GameObject player;  //玩家对象
     public float currentNum; //角色当前耐力值
-    private float maxNum=100; //角色最大耐力值
+    private float maxNum=120; //角色最大耐力值
     private float startScaleY; //耐力条的初始缩放Y值
 
     private void Awake()
