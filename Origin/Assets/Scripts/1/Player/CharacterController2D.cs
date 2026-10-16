@@ -107,7 +107,7 @@ public class CharacterController2D : MonoBehaviour
             OnAirEvent.Invoke();
             m_Grounded = false;
             // 施加弹跳力
-            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce),ForceMode2D.Impulse);
             animator.SetTrigger("isJump");
             m_NextGroundCheckTime = Time.time + m_NextGroundCheckLag;
         }

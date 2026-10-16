@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerType
+{
+    IDLE,
+    FLY
+}
+
 public class PlayerMove3 : MonoBehaviour
 {
     private static PlayerMove3 instance;
@@ -24,6 +30,10 @@ public class PlayerMove3 : MonoBehaviour
     private float h; //记录水平方向的输入量
     private float v; //记录竖直方向的输入量
     private float lastTime; //按下W键时记录当前游戏时间
+    private bool isEnterFly; //是否进入起飞状态
+
+    private Animator animator; //玩家动画状态机组件
+    private PlayerType playerType; //玩家动画状态枚举
 
     private void Awake()
     {
@@ -33,6 +43,9 @@ public class PlayerMove3 : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        UpdateAnimate(PlayerType.IDLE); //初始默认为待机状态
+        
     }
 
     // Update is called once per frame
@@ -44,6 +57,7 @@ public class PlayerMove3 : MonoBehaviour
         if (isFly)
         {
             rb.gravityScale = 0; //进入飞行状态时，重力参数置为零
+            UpdateAnimate(PlayerType.FLY);
         }
     }
 
@@ -104,6 +118,7 @@ public class PlayerMove3 : MonoBehaviour
             if(Time.time-lastTime>=enterFlyTime)
             {
                 isFly=true;
+                isEnterFly=true;
             }
         }
     }
@@ -116,6 +131,32 @@ public class PlayerMove3 : MonoBehaviour
             rb.gravityScale = 1;
             isFly=false;
             isAdd=true;
+            isEnterFly = false;
+            UpdateAnimate(PlayerType.IDLE);
+        }
+    }
+
+    //玩家动画状态更换函数
+    private void UpdateAnimate(PlayerType type)
+    {
+        if(playerType==PlayerType.IDLE)
+        {
+            animator.SetBool("isIdle",false);
+        }
+        if (playerType == PlayerType.FLY)
+        {
+            animator.SetBool("isFly", false);
+        }
+
+        playerType = type;
+
+        if (playerType == PlayerType.IDLE)
+        {
+            animator.SetBool("isIdle", true);
+        }
+        if (playerType == PlayerType.FLY)
+        {
+            animator.SetBool("isFly", true);
         }
     }
 }
