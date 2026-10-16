@@ -28,6 +28,8 @@ public class ChangePoint : MonoBehaviour
 
     IEnumerator ClosedLight(GameObject obj)
     {
+        DeadChange.Instance.DarkChange();
+        yield return new WaitForSeconds(1);
         light1.intensity = 0;
         //更新角色位置
         BornPointMgr.Instance.UpdatePoint(obj);
