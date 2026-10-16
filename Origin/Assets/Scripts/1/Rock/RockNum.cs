@@ -12,7 +12,7 @@ public class RockNum : MonoBehaviour
 
     void Start()
     {
-        var data = GameDataMgr.Instance.gameData.rockDataList.Find(r => r.rockID == rockID);
+        var data = GameDataMgr.Instance.gameData1.rockDataList.Find(r => r.rockID == rockID);
         if (data != null && data.isBreak)
         {
             Destroy(this.gameObject);   // 已碎，直接不生成
@@ -20,7 +20,7 @@ public class RockNum : MonoBehaviour
         }
         if (data == null)               // 第一次进入，注册一条默认数据
         {
-            GameDataMgr.Instance.gameData.rockDataList.Add(new RockData { rockID = rockID, isBreak = false });
+            GameDataMgr.Instance.gameData1.rockDataList.Add(new RockData { rockID = rockID, isBreak = false });
         }
     }
 }

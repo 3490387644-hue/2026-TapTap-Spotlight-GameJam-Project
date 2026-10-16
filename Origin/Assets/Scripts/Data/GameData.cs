@@ -27,21 +27,26 @@ public enum E_PlayerState
     Large, // 变大状态
 }
 
+public class GlobalGameData
+{
+    public E_SceneType sceneType = E_SceneType.BeginScene; // 场景类型
+    public MusicData musicData = new MusicData(); // 音乐和音效数据
+    public E_MusicTriggerType currentMusicTriggerType; // 当前播放的背景音乐类型
+}
+
 /// <summary>
 /// 游戏存档的数据类
 /// 以后游戏过程中所有需要存档的数据都放在这里面
 /// </summary>
 [System.Serializable]
-public class GameData
+public class GameData1
 {
     public bool hasSaveData = false; // 是否有存档数据
-    public E_SceneType sceneType = E_SceneType.BeginScene; // 场景类型
     public int greenAlgaeCollectedCount; // 已经收集的绿藻数量
-    public E_MusicTriggerType currentMusicTriggerType; // 当前播放的背景音乐类型
-    public MusicData musicData = new MusicData(); // 音乐和音效数据
-    public PlayerData playerData = new PlayerData(); // 玩家数据
+    public PlayerData1 playerData = new PlayerData1(); // 玩家数据
     public List<RockData> rockDataList = new List<RockData>(); // 特殊岩石数据列表
     public CheckPointData checkPointData = new CheckPointData(); // 回溯点数据
+    public List<BlackFogData> blackFogDataList = new List<BlackFogData>(); // 黑雾数据列表
 }
 
 /// <summary>
@@ -58,7 +63,7 @@ public class MusicData
 /// 玩家数据类
 /// </summary>
 [System.Serializable]
-public class PlayerData
+public class PlayerData1
 {
     public PositionData playerPos; // 玩家位置数据
     public E_PlayerState playerState; // 玩家状态数据
@@ -84,6 +89,16 @@ public class CheckPointData
 }
 
 /// <summary>
+/// 黑雾数据类
+/// </summary>
+[System.Serializable]
+public class BlackFogData
+{
+    public int blackFogID; // 黑雾的ID
+    public bool isDestroyed; // 黑雾是否已经被销毁
+}
+
+/// <summary>
 /// 玩家位置数据结构
 /// </summary>
 [System.Serializable]
@@ -105,4 +120,14 @@ public class PositionData
         return new Vector3(_x, _y, _z);
     }
 
+}
+
+/// <summary>
+/// 第四章场景机关数据类
+/// </summary>
+[System.Serializable]
+public class MechanismData
+{
+    public int mechanismID; // 机关的ID
+    public bool isOpen; // 机关是否已经打开
 }

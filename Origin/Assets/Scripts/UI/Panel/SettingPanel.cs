@@ -110,7 +110,7 @@ public class SettingPanel : BasePanel
         Screen.SetResolution(
             resolution.x,
             resolution.y,
-            Screen.fullScreenMode);
+            FullScreenMode.Windowed);
     }
 
     public void SetSource(E_SettingSource source)

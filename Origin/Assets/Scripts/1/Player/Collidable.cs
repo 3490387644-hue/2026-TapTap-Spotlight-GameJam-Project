@@ -31,7 +31,7 @@ public class Collidable : MonoBehaviour
                         RockNum rock = colliders[i].gameObject.GetComponent<RockNum>();
                         if (rock.collidableNum == 0)
                         {
-                            var rd = GameDataMgr.Instance.gameData.rockDataList.Find(r => r.rockID == rock.rockID);
+                            var rd = GameDataMgr.Instance.gameData1.rockDataList.Find(r => r.rockID == rock.rockID);
                             if (rd != null) rd.isBreak = true;   // ±ê¼ÇÒÑËé
                         }
                         Vector3 p = colliders[i].transform.position;

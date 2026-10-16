@@ -108,7 +108,7 @@ public class LoadingPanel : BasePanel
         {
             Debug.Log("DialogManager");
             E_SceneType scene = GameSceneManager.Instance.currentSceneType;
-            if(scene == E_SceneType.GameScene1 || scene == E_SceneType.GameScene2)
+            if(scene == E_SceneType.GameScene01 || scene == E_SceneType.GameScene02)
                 UIManager.Instance.ShowPanelAsync<QuitPanel>();
             else
             {

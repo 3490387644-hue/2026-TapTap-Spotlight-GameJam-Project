@@ -6,7 +6,7 @@ public class BirthPos : MonoBehaviour
 {
     void Awake()
     {
-        GameSceneManager.Instance.GeneratePlayer(E_SceneType.GameScene1, transform.localPosition);
+        GameSceneManager.Instance.GeneratePlayer(E_SceneType.GameScene01, transform.localPosition);
     }
 
     // Start is called before the first frame update
