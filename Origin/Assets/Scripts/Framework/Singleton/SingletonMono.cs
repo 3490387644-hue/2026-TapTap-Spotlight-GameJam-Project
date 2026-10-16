@@ -28,6 +28,6 @@ public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
         instance=this as T;
         //我们挂载继承该单例模式基类的脚本后 依附的对象过场景时就不会被移除了
         //就可以保证在游戏的整个生命周期中都存在
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
     }
 }

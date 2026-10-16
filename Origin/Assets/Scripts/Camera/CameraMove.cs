@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,21 +7,19 @@ public class CameraMove : MonoBehaviour
 {
     public Transform player;//玩家对象的位置
 
-    private float lastPlayerPosition; //玩家上一次x轴的位置
+    public float lX; //左边界位置
+    public float lY; //右边界位置
 
     void Start()
     {
-        lastPlayerPosition=player.position.x;
+
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if(this.transform.position.x<=185.5&& this.transform.position.x>= -29.45)
-        {
-            float xChange = player.position.x - lastPlayerPosition;
-            this.transform.position += new Vector3(xChange, 0, 0);
-            lastPlayerPosition = player.position.x;
-        }
+        float newX = player.position.x;
+        newX = Mathf.Clamp(newX, lX, lY); //限制摄像机X轴的左右界限
+        this.transform.position = new Vector3(newX, 0, -10);
     }
 }
