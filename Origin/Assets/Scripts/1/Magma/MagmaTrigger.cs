@@ -9,7 +9,15 @@ public class MagmaTrigger : MonoBehaviour
     {
         if(collision.gameObject.tag=="Player")
         {
-            collision.transform.position=CheckpointMgr.Instance.GetCheckPoint().transform.position;
+            StartCoroutine(myCoroutine(collision.gameObject));
         }
+    }
+
+    IEnumerator myCoroutine(GameObject obj)
+    {
+        DeadChange.Instance.DarkChange();
+        yield return new WaitForSeconds(1.2f);
+        obj.GetComponent<Rigidbody2D>().velocity=Vector2.zero;
+        obj.transform.position = CheckpointMgr.Instance.GetCheckPoint().transform.position;
     }
 }
