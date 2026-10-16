@@ -11,6 +11,9 @@ public class Boot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 设置初始分辨率为 1920*1080 窗口模式
+        Screen.SetResolution(1920, 1080, FullScreenMode.Windowed);
+ 
         // 加载游戏数据
         GameSceneManager.Instance.LoadScene(E_SceneType.BeginScene, ()=>
         {

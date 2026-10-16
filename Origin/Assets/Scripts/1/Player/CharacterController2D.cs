@@ -3,8 +3,6 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
-    private static CharacterController2D instance;
-    public static CharacterController2D Instance=>instance;
     public float jumpForce = 400f;                          // 弹跳力
     public bool canAirControl = false;                      // 在空中时，是否能控制
     public LayerMask groundMask;                            // 定义哪一个Layer是地面
@@ -35,7 +33,6 @@ public class CharacterController2D : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 

@@ -8,6 +8,7 @@ public class MagmaTrigger : MonoBehaviour
     private string dialogText;
     void Start()
     {
+        // hasTriggered = GameSceneManager.Instance.GetSceneObjectCollisionDialogData[1].HasTriggered; // 获取是否触发
         hasTriggered = GameDataMgr.Instance.sceneObjectCollisionDialogData[1].HasTriggered; // 获取是否触发
         if(!hasTriggered)
             dialogText = GameDataMgr.Instance.sceneObjectCollisionDialogData[1].Text; // 获取对话文本
