@@ -22,5 +22,29 @@
     "Text": "按“E”键发光驱散黑色障碍",
     "Type": 1,
     "HasTriggered": false
+  },
+  {
+    "ID": 4,
+    "Text": "这么远，感觉飞不过去啊…，但我似乎有某种能力",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 5,
+    "Text": "站在平面上按“F”键可以记录起点，在飞行途中再次按“F”键可以回溯到记录点",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 6,
+    "Text": "在空中留下残影后，待体力值恢复可点击“E”键回溯到残影位置并立刻开启飞行",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 7,
+    "Text": "按“E”键后该流程结束，后续遇到难以过去的地方可尝试该操作度过难关",
+    "Type": 1,
+    "HasTriggered": false
   }
 ]

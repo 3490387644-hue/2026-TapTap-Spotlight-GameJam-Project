@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class BirthPos : MonoBehaviour
 {
+    public E_SceneType sceneType; //出生点所在的场景类型
     void Awake()
     {
-        GameSceneManager.Instance.GeneratePlayer(E_SceneType.GameScene01, transform.localPosition);
+        GameSceneManager.Instance.GeneratePlayer(sceneType, transform.localPosition);
     }
 
     // Start is called before the first frame update

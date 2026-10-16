@@ -5,15 +5,10 @@ using UnityEngine;
 public class MagmaTrigger : MonoBehaviour
 {
     private bool hasTriggered; // 防止重复触发
-    private string dialogText;
     void Start()
     {
         // hasTriggered = GameSceneManager.Instance.GetSceneObjectCollisionDialogData[1].HasTriggered; // 获取是否触发
         hasTriggered = GameDataMgr.Instance.sceneObjectCollisionDialogData[1].HasTriggered; // 获取是否触发
-        if(!hasTriggered)
-            dialogText = GameDataMgr.Instance.sceneObjectCollisionDialogData[1].Text; // 获取对话文本
-        else
-            dialogText = ""; // 如果已经触发过，设置为空字符串
         EventCenter.Instance.AddEventListener<bool>(E_EventType.MagmaTrigger, OnTriggered); // 监听对话事件，传递索引1
     }
 
@@ -22,13 +17,13 @@ public class MagmaTrigger : MonoBehaviour
     {
         if(collision.gameObject.tag=="Player")
         {
-            collision.transform.position=GameSceneManager.Instance.GetCheckPointData.checkPointPos.ToVector3(); // 回到最新的复活点
+            collision.transform.position=CheckpointMgr.Instance.GetCheckPoint().ToVector3(); // 回到最新的复活点
             Debug.Log("MagmaTrigger触发: " + this.gameObject.name);
             if(!hasTriggered)
             {
                 EventCenter.Instance.EventTrigger<bool>(E_EventType.MagmaTrigger, true); // 通知所有监听者岩浆触发事件
                 // 显示对话面板
-                DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 0, dialogText);
+                DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 1);
             }
         }
     }

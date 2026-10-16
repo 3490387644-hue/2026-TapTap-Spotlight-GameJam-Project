@@ -37,13 +37,13 @@ public class DeadCheck : MonoBehaviour
         //死亡时恢复角色的耐力值
         StaminaChange.Instance.currentNum = 100;
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1f);
         player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        player.transform.position = CheckpointMgr.Instance.GetCheckPoint().transform.position;
-        if (player.transform.localScale != CheckpointMgr.Instance.GetCheckPoint().transform.localScale)
-        {
-            player.gameObject.GetComponent<PlayerMove3>().isFacingRight = !player.gameObject.GetComponent<PlayerMove3>().isFacingRight;
-        }
-        player.transform.localScale=CheckpointMgr.Instance.GetCheckPoint().transform.localScale;
+        player.transform.position = CheckpointMgr.Instance.GetCheckPoint().ToVector3();
+        // if (player.transform.localScale != CheckpointMgr.Instance.GetCheckPoint().transform.localScale)
+        // {
+        //     player.gameObject.GetComponent<PlayerMove3>().isFacingRight = !player.gameObject.GetComponent<PlayerMove3>().isFacingRight;
+        // }
+        // player.transform.localScale=CheckpointMgr.Instance.GetCheckPoint().transform.localScale;
     }
 }
