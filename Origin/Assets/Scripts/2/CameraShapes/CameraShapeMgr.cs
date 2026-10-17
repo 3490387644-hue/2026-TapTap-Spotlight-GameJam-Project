@@ -17,11 +17,14 @@ public class CameraShapeMgr : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        index = 1;
     }
 
     public void UpdateCameraShape()
     {
+        Debug.Log("CameraShapeMgr:更新相机边界范围");
         confiner.m_BoundingShape2D=cameraShapes[index];
-        index++;
+        confiner.InvalidateCache();
+        index = (index + 1) < cameraShapes.Count ? index + 1 : cameraShapes.Count - 1; //防止越界
     }
 }

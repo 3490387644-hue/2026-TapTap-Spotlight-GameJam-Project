@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
@@ -13,7 +13,7 @@ public class CharacterController2D : MonoBehaviour
     public bool m_FacingRight = true;  // 玩家是否面朝右边
     private Vector3 m_Velocity = Vector3.zero;
 
-    const float m_NextGroundCheckLag = 0.8f;    // 起跳后的一小段时间，不能再次起跳。防止连跳的一种解决方案
+    const float m_NextGroundCheckLag = 0.6f;    // 起跳后的一小段时间，不能再次起跳。防止连跳的一种解决方案
     float m_NextGroundCheckTime;            // 过了这个时间才可能落地、才能再次起跳
 
     // 这个角色控制器，是依靠刚体驱动的
@@ -107,12 +107,11 @@ public class CharacterController2D : MonoBehaviour
             OnAirEvent.Invoke();
             m_Grounded = false;
             // 施加弹跳力
-            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce),ForceMode2D.Impulse);
+            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
             animator.SetTrigger("isJump");
             m_NextGroundCheckTime = Time.time + m_NextGroundCheckLag;
         }
     }
-
 
     private void Flip()
     {
@@ -121,18 +120,5 @@ public class CharacterController2D : MonoBehaviour
 
         // 缩放的x轴乘以-1，图片就水平翻转了
         transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
-    }
-
-    public void OnLandSound()
-    {
-        Debug.Log("角色落地音效");
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.LandSound, false, false);
-    }
-
-    public void OnJumpSound()
-    {
-        // 发出跳跃音效
-        Debug.Log("角色跳跃音效");
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.JumpSound, false, false);
     }
 }

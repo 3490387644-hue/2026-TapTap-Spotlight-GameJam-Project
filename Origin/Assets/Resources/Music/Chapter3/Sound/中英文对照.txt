@@ -1,0 +1,6 @@
+FlySound-飞行声
+AirflowSound-气流声
+VineBreakSound-藤蔓断裂
+JumpLandingSound-跳跃后落地声
+MeteoriteImpactSound-陨石撞击声
+Walk-走路声

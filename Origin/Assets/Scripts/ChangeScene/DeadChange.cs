@@ -24,6 +24,7 @@ public class DeadChange : MonoBehaviour
     /// </summary>
     public void DarkChange()
     {
+        Debug.Log("DarkChange:玩家死亡，开始渐变黑");
         StartCoroutine(DarkChangeCoroutine());
     }
 

@@ -12,5 +12,7 @@ public enum E_EventType
     DialogType,
     MagmaTrigger,
     NPCTrigger,
-    MechanismTrigger
+    MechanismTrigger,
+    StoneTrigger,
+    FireOutTrigger
 }

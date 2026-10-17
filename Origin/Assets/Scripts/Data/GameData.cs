@@ -20,12 +20,12 @@ public enum E_MusicTriggerType
 
 public enum E_SoundTriggerType
 {
-    MagmaSound, // 岩浆
-    GreenAlgaeAbsorbSound, // 绿藻
-    JumpSound, // 跳跃
-    FootstepSound, // 脚步声
-    LandSound, // 落地
-    RockBreakSound
+    Chapter1MagmaSound, // 岩浆
+    ChapterGreenAlgaeAbsorbSound, // 绿藻
+    ChapterJumpSound, // 跳跃
+    Chapter1FootstepSound, // 脚步声
+    Chapter1LandSound, // 落地
+    Chapter1RockBreakSound
 }
 
 public enum E_PlayerState
@@ -92,7 +92,7 @@ public class RockData
 [System.Serializable]
 public class CheckPointData
 {
-    public PositionData checkPointPos; // 检查点位置数据
+    public PositionData checkPointPos = new PositionData(); // 检查点位置数据
 }
 
 /// <summary>
@@ -128,6 +128,22 @@ public class PositionData
     }
 
 }
+
+#region 第二关数据
+[System.Serializable]
+public class GameData2
+{
+    public bool hasSaveData = false; // 是否有存档数据
+    public PlayerData2 playerData = new PlayerData2(); // 玩家数据
+}
+
+[System.Serializable]
+public class PlayerData2
+{
+    public PositionData playerPos; // 玩家位置数据
+}
+#endregion
+
 #region 第三关数据
 /// <summary>
 /// 场景3的游戏存档数据类

@@ -58,5 +58,29 @@
     "Text": "长按两秒“W”键可进入飞行状态，飞行会消耗体力值，该关卡不设置跳跃键",
     "Type": 1,
     "HasTriggered": false
+  },
+  {
+    "ID": 10,
+    "Text": "没、没力气了…",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 11,
+    "Text": "好痛",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 12,
+    "Text": "什么东西？",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 13,
+    "Text": "当遇到爬不过去的墙时，可以长按\"Shift\"键配合进行攀爬",
+    "Type": 1,
+    "HasTriggered": false
   }
 ]

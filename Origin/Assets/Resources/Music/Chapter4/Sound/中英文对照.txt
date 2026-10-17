@@ -1,0 +1,3 @@
+GiveTorchToPlayerSound-把火把给玩家
+FootstepSound-脚步声
+OpenDoorSound-开门声

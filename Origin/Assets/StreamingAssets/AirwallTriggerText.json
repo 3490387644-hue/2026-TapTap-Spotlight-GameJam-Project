@@ -31,7 +31,7 @@
   },
   {
     "ID": 5,
-    "Text": "站在平面上按“F”键可以记录起点，在飞行途中再次按“F”键可以回溯到记录点",
+    "Text": "玩法：站在平面上按“F”键可以记录起点，在飞行途中再次按“F”键可以回溯到记录点",
     "Type": 1,
     "HasTriggered": false
   },
@@ -44,6 +44,18 @@
   {
     "ID": 7,
     "Text": "按“E”键后该流程结束，后续遇到难以过去的地方可尝试该操作度过难关",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 8,
+    "Text": "飞过去…就可以回家了吧…",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 9,
+    "Text": "终于、终于到了。这次我能回家吗？",
     "Type": 1,
     "HasTriggered": false
   }

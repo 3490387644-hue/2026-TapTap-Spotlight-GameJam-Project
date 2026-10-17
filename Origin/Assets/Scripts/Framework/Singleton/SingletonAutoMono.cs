@@ -10,12 +10,15 @@ using UnityEngine;
 /// <typeparam name="T"></typeparam>
 public class SingletonAutoMono<T> : MonoBehaviour where T : MonoBehaviour
 {
+    private static bool applicationIsQuitting = false;
     private static T instance;
     public static T Instance
     {
         get
         {
-            if(instance == null)
+            if (applicationIsQuitting)
+                return null;
+            if (instance == null)
             {
                 //动态创建 动态挂载
                 //在场景上创建空物体
@@ -29,4 +32,7 @@ public class SingletonAutoMono<T> : MonoBehaviour where T : MonoBehaviour
             return instance;
         }
     }
+
+    protected virtual void OnApplicationQuit() { applicationIsQuitting = true; }
+    protected virtual void OnDestroy() { applicationIsQuitting = true; }
 }

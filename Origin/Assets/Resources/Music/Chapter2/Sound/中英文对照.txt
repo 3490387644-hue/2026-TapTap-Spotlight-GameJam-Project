@@ -1,0 +1,6 @@
+LowStaminaWarning-耐力不足警告
+BugTalks-虫子说话
+ClimbingSound-攀爬声
+JumpLandingSound-跳跃后落地声
+JumpSound-跳跃声
+WalkSound-走路声

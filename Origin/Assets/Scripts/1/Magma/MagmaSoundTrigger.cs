@@ -21,7 +21,7 @@ public class MagmaSoundTrigger : MonoBehaviour
 
         playerInside = true;
 
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.MagmaSound, true, true, OnMagmaSoundLoaded);
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1MagmaSound, true, true, OnMagmaSoundLoaded);
     }
 
     private void OnTriggerExit2D(Collider2D other)

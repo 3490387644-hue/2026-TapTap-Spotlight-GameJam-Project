@@ -27,35 +27,4 @@ public class DialogPanel : BasePanel
         tip1.text = "按任意键继续";
         tip1.gameObject.SetActive(false);
     }
-
-    private void FunctionByDialogType(E_DialogFuncType type)
-    {
-        switch(type)
-        {
-            case E_DialogFuncType.Type1:
-                // 执行类型1的功能
-                Func1();
-                break;
-            case E_DialogFuncType.Type2:
-                // 执行类型2的功能
-                Func2();
-                break;
-        }
-    }
-
-    private void Func1()
-    {
-        // 锁住玩家移动的逻辑
-        
-    }
-
-    private void Func2()
-    {
-        
-    }
-
-    private void Func3()
-    {
-        
-    }
 }

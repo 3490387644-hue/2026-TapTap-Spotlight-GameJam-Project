@@ -73,7 +73,9 @@ public class ResMgr : BaseManager<ResMgr>
         }
         else
         {
-            return Load<T>(path);
+            T result = Load<T>(path);
+            callBack?.Invoke(result);
+            return result;
         }
     }
 
