@@ -37,6 +37,11 @@ public class FireOut : MonoBehaviour
         StartCoroutine(myCoroutine());
     }
 
+    public void OnFireOut()
+    {
+        
+    }
+
     IEnumerator myCoroutine()
     {
         Collider2D collider = Physics2D.OverlapBox(

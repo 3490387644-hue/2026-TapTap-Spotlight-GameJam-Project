@@ -25,7 +25,8 @@ public enum E_SoundTriggerType
     ChapterJumpSound, // ÌøÔ¾
     Chapter1FootstepSound, // ½Å²½Éù
     Chapter1LandSound, // ÂäµØ
-    Chapter1RockBreakSound
+    Chapter1RockBreakSound,
+    
 }
 
 public enum E_PlayerState
