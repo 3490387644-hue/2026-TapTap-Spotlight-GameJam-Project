@@ -28,7 +28,7 @@ public class ChangeSce : MonoBehaviour
     IEnumerator myCoroutine()
     {
         DeadChange.Instance.DarkChange();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.7f);
         AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
         op.allowSceneActivation = false; // 可选：加载完不立刻切换
         while (op.progress < 0.9f)

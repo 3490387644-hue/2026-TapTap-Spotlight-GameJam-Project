@@ -5,7 +5,7 @@ using UnityEngine;
 public enum PlayerType
 {
     IDLE,
-    FLY
+    FLY,
 }
 
 public class PlayerMove3 : MonoBehaviour
@@ -34,6 +34,7 @@ public class PlayerMove3 : MonoBehaviour
 
     private Animator animator; //玩家动画状态机组件
     private PlayerType playerType; //玩家动画状态枚举
+    private bool isFirst=true; //游戏加载时第一次落地不算
 
     private void Awake()
     {
@@ -127,8 +128,8 @@ public class PlayerMove3 : MonoBehaviour
         if(collision.gameObject.tag=="Ground")
         {
             rb.gravityScale = 1;
-            isFly=false;
-            isAdd=true;
+            isFly = false;
+            isAdd = true;
             isEnterFly = false;
             UpdateAnimate(PlayerType.IDLE);
         }
