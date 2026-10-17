@@ -101,6 +101,13 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     }
     #endregion
 
+    #region 第二章数据更新方法
+    public void UpdateChapter2Info()
+    {
+        
+    }
+    #endregion
+
     #region 第三章数据更新方法
     public void UpdateChapter3Info(StoneData stoneData)
     {
@@ -164,6 +171,12 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
             case E_MusicTriggerType.Chapter3_Level3:
                 MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter3 + "3-3");
                 break;
+            case E_MusicTriggerType.Chapter4_Level1:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter4 + "4-1");
+                break;
+            default:
+                MusicMgr.Instance.PlayBKMusic(PathUtil.MusicPathOfChapter1 + "1-1");
+                break;
         }
     }
 
@@ -171,22 +184,22 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     {
         switch (triggerType)
         {
-            case E_SoundTriggerType.MagmaSound:
+            case E_SoundTriggerType.Chapter1MagmaSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "MagmaLoopingSound", isLoop, isAsync, callback);
                 break;
-            case E_SoundTriggerType.GreenAlgaeAbsorbSound:
+            case E_SoundTriggerType.ChapterGreenAlgaeAbsorbSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "GreenAlgaeAbsorbSound", isLoop, isAsync, callback);
                 break;
-            case E_SoundTriggerType.JumpSound:
+            case E_SoundTriggerType.ChapterJumpSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "JumpSound", isLoop, isAsync, callback);
                 break;
-            case E_SoundTriggerType.FootstepSound:
+            case E_SoundTriggerType.Chapter1FootstepSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "FootstepSound", isLoop, isAsync, callback);
                 break;
-            case E_SoundTriggerType.LandSound:
+            case E_SoundTriggerType.Chapter1LandSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "LandingSound", isLoop, isAsync, callback);
                 break;
-            case E_SoundTriggerType.RockBreakSound:
+            case E_SoundTriggerType.Chapter1RockBreakSound:
                 MusicMgr.Instance.PlaySound(PathUtil.SoundPathOfChapter1 + "RockShatterSound", isLoop, isAsync, callback);
                 break;
         }
@@ -207,6 +220,14 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
                 ChangePlayerScale(GameDataMgr.Instance.gameData1.playerData.playerState);
                 break;
             case E_SceneType.GameScene02:
+                GameObject playerObj2 = Instantiate(ResMgr.Instance.Load<GameObject>(PathUtil.PlayerPath + "Player2"));
+                player = playerObj2;
+                playerObj2.transform.position = GameDataMgr.Instance.gameData2.playerData.playerPos != null
+                ? new Vector3(GameDataMgr.Instance.gameData2.playerData.playerPos._x,
+                GameDataMgr.Instance.gameData2.playerData.playerPos._y,
+                GameDataMgr.Instance.gameData2.playerData.playerPos._z)
+                : position;
+                player.transform.localScale = new Vector3(-0.2f, 0.2f, 1);
                 break;
             case E_SceneType.GameScene03:
                 GameObject playerObj3 = Instantiate(ResMgr.Instance.Load<GameObject>(PathUtil.PlayerPath + "Player3"));
@@ -243,7 +264,9 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
 
     public void UpdateBlackFogDataList(int ID)
     {
-        blackFogDataList[ID].isDestroyed = true;
+        var fogData = blackFogDataList.Find(f => f.blackFogID == ID);
+        if (fogData != null)
+            fogData.isDestroyed = true;
     }
 
     public void UpdateNPCState(int npcID)

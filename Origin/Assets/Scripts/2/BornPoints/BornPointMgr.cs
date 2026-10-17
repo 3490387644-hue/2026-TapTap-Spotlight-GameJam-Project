@@ -20,6 +20,10 @@ public class BornPointMgr : MonoBehaviour
     public void UpdatePoint(GameObject obj)
     {
         index++;
+        if(index == 1)
+            GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter2_Level2);
+        else if(index == 2)
+            GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter2_Level3);
         obj.transform.position=bornPoints[index].transform.position;
     }
 }

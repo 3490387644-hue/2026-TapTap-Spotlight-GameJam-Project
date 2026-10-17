@@ -6,8 +6,20 @@
     "HasTriggered": false
   },
   {
+    "ID": 1,
+    "Text": "我回家了吗？",
+    "Type": 0,
+    "HasTriggered": false
+  },
+  {
     "ID": 2,
-    "Text": "我将以最早哺乳动物翔兽出击！",
+    "Text": "……不对，这是哪里？",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 3,
+    "Text": "我回家了吗？哦不怎么还有一对翅膀",
     "Type": 0,
     "HasTriggered": false
   }

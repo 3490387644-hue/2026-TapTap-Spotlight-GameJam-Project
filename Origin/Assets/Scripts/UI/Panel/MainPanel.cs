@@ -30,7 +30,7 @@ public class MainPanel : BasePanel
     {
         base.OnEnable();
         GameDataMgr.Instance.Init(); // 确保游戏数据已初始化
-        pIndex = GameDataMgr.Instance.gameData1.hasSaveData ? 1 : 0;
+        pIndex = GameDataMgr.Instance.gameData1.hasSaveData ? 1 : 0; // 根据是否有存档数据来决定显示哪个主面板
         for(int i = 0; i < mainPanels.Length; i++)
         {
             mainPanels[i].SetActive(i == pIndex);
@@ -50,17 +50,17 @@ public class MainPanel : BasePanel
         buttonDic["AboutButton"].onClick.AddListener(OnClickAboutButton);
         buttonDic["ContinueButton"].onClick.AddListener(OnClickContinueButton);
         buttonDic["NewGameButton"].onClick.AddListener(OnClickNewGameButton);
+        buttonDic["QuitButton2"].onClick.AddListener(OnClickQuitButton);
     }
 
     private void OnClickStartButton()
     {
         Debug.Log("开始游戏");
         UIManager.Instance.HidePanel<MainPanel>();
-        E_SceneType sceneType = GameDataMgr.Instance.globalGameData.sceneType == E_SceneType.None ? E_SceneType.GameScene01 : GameDataMgr.Instance.globalGameData.sceneType;
-        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene03, () =>
+        GameSceneManager.Instance.LoadScene(E_SceneType.GameScene01, () =>
         {
-            DialogManager.Instance.ShowType1Dialog(1);
-            GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter3_Level1);
+            DialogManager.Instance.ShowType1Dialog(0);
+            // GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter2_Level1);
         });
     }
 
@@ -71,7 +71,7 @@ public class MainPanel : BasePanel
         UIManager.Instance.HidePanel<MainPanel>();
         GameSceneManager.Instance.LoadScene(GameDataMgr.Instance.globalGameData.sceneType, ()=>
         {
-            GameSceneManager.Instance.PlayMusicByTriggerType(GameDataMgr.Instance.globalGameData.currentMusicTriggerType);
+            GameSceneManager.Instance.PlayMusicByTriggerType(GameSceneManager.Instance.currentMusicTriggerType);
         });
         // UIManager.Instance.HidePanel<MainPanel>(true, (panel)=>
         // {

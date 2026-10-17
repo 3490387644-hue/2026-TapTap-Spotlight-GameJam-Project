@@ -46,7 +46,7 @@ public class GreenAlgae : MonoBehaviour
             lastPlayerPosition = collision.transform.position;
             isForward = true;
             GameSceneManager.Instance.OnGreenAlgaeCollected(); //通知GameSceneManager绿藻被收集
-            GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.GreenAlgaeAbsorbSound, false, true); //播放绿藻收集音效
+            GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.ChapterGreenAlgaeAbsorbSound, false, true); //播放绿藻收集音效
         }
     }
 }

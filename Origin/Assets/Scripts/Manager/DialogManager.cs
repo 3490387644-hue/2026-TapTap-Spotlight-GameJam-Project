@@ -69,7 +69,6 @@ public class DialogManager : SingletonAutoMono<DialogManager>
         E_DialogFuncType dialogType;
         while (dialogCount > 0)
         {
-            GameDataMgr.Instance.sceneObjectCollisionDialogData[nowDialogIndex].HasTriggered = true; // 标记当前文本已触发
             dialogType = (E_DialogFuncType)GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].Type;
             if (dialogType != E_DialogFuncType.Type1)
             {
@@ -118,6 +117,12 @@ public class DialogManager : SingletonAutoMono<DialogManager>
                 if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[0].HasTriggered)
                 {
                     DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 0);
+                }
+                break;
+            case E_SceneType.GameScene02:
+                if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[13].HasTriggered)
+                {
+                    DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 13);
                 }
                 break;
             case E_SceneType.GameScene03:

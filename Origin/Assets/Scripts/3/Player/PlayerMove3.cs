@@ -110,12 +110,10 @@ public class PlayerMove3 : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.W))
         {
             lastTime = Time.time;
-            Debug.Log("按下W键，记录当前时间: " + lastTime);
         }
         if(Input.GetKey(KeyCode.W))
         {
-            Debug.Log("长按W键");
-            if(Time.time-lastTime>=enterFlyTime)
+            if(Time.time-lastTime>=enterFlyTime&&!isEnterFly)
             {
                 isFly=true;
                 isEnterFly=true;

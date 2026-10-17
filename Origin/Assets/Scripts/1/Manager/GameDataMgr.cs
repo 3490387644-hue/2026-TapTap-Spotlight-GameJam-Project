@@ -21,10 +21,10 @@ public enum E_DialogDataType
 }
 
 public class GameDataMgr : BaseManager<GameDataMgr>
-
 {
     public GlobalGameData globalGameData = new GlobalGameData();
     public GameData1 gameData1 = new GameData1();
+    public GameData2 gameData2 = new GameData2();
     public GameData3 gameData3 = new GameData3();
     public List<DialogData> typewritterDialogData = new List<DialogData>();
     public List<DialogData> sceneObjectCollisionDialogData = new List<DialogData>();
@@ -67,6 +67,7 @@ public class GameDataMgr : BaseManager<GameDataMgr>
     {
         SaveGlobalGameData();
         SaveGameData1();
+        SaveGameData2();
         SaveGameData3();
     }
 
@@ -84,6 +85,9 @@ public class GameDataMgr : BaseManager<GameDataMgr>
             checkPointData = GameSceneManager.Instance.GetCheckPointData, // 保存当前游戏中复活点的位置数据
         };
         JsonMgr.Instance.SaveData(globalGameData, "GlobalGameData", JsonType.JsonUtlity);
+        JsonMgr.Instance.SaveData(typewritterDialogData, "TypewritterText", JsonType.LitJson);
+        JsonMgr.Instance.SaveData(sceneObjectCollisionDialogData, "SceneObjectCollisionText", JsonType.LitJson);
+        JsonMgr.Instance.SaveData(airwallTriggerDialogData, "AirwallTriggerText", JsonType.LitJson);
     }
 
     public void SaveGameData1()
@@ -107,9 +111,26 @@ public class GameDataMgr : BaseManager<GameDataMgr>
             blackFogDataList = GameSceneManager.Instance.GetBlackFogDataList // 保存当前游戏中黑雾的状态列表
         };
         JsonMgr.Instance.SaveData(data, "GameData1", JsonType.JsonUtlity);
-        JsonMgr.Instance.SaveData(typewritterDialogData, "TypewritterText", JsonType.LitJson);
-        JsonMgr.Instance.SaveData(sceneObjectCollisionDialogData, "SceneObjectCollisionText", JsonType.LitJson);
-        JsonMgr.Instance.SaveData(airwallTriggerDialogData, "AirwallTriggerText", JsonType.LitJson);
+    }
+
+    public void SaveGameData2()
+    {
+        Vector3 curPos = GameSceneManager.Instance.player.transform.localPosition;
+        GameData2 data = new GameData2
+        {
+            hasSaveData = true,
+            playerData = new PlayerData2
+            {
+                playerPos = new PositionData
+                {
+                    _x = curPos.x,
+                    _y = curPos.y,
+                    _z = curPos.z
+                }
+            },
+            // 这里可以添加其他需要保存的数据，比如敌人状态、道具状态等
+        };
+        JsonMgr.Instance.SaveData(data, "GameData2", JsonType.JsonUtlity);
     }
 
     public void SaveGameData3()
@@ -147,7 +168,7 @@ public class GameDataMgr : BaseManager<GameDataMgr>
     private void LoadGlobalGameData()
     {
         globalGameData = JsonMgr.Instance.LoadData<GlobalGameData>("GlobalGameData");
-        if(globalGameData == null)
+        if (globalGameData == null)
             globalGameData.sceneType = E_SceneType.None;
         GameSceneManager.Instance.UpdateGlobalInfo(
             globalGameData.currentMusicTriggerType,
@@ -171,6 +192,11 @@ public class GameDataMgr : BaseManager<GameDataMgr>
         MusicMgr.Instance.UpdateData(); // 更新音乐和音效的值
     }
 
+    public void LoadGameData2()
+    {
+        gameData2 = JsonMgr.Instance.LoadData<GameData2>("GameData2");
+    }
+
     public void LoadGameData3()
     {
         gameData3 = JsonMgr.Instance.LoadData<GameData3>("GameData3");
@@ -188,6 +214,7 @@ public class GameDataMgr : BaseManager<GameDataMgr>
         EnsureDialogDataInPersistent(); // 确保对话Json已从默认目录复制到读写目录
         LoadGlobalGameData(); // 加载全局游戏数据
         LoadGameData1(); // 加载第一章游戏数据
+        LoadGameData2(); // 加载第二章游戏数据
         LoadGameData3(); // 加载第三章游戏数据
     }
 }
