@@ -33,6 +33,8 @@ public class ClimbWall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameSceneManager.Instance.IsInputLocked)
+            return;
         float v = Input.GetAxis("Vertical");
         CheckWall();
         if(Input.GetKey(KeyCode.LeftShift)&&(isRightWall||isLeftWall))

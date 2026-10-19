@@ -14,5 +14,8 @@ public enum E_EventType
     NPCTrigger,
     MechanismTrigger,
     StoneTrigger,
-    FireOutTrigger
+    FireOutTrigger,
+    Timeline1Register,
+    Timeline2Register,
+    Timeline3Register,
 }

@@ -53,6 +53,18 @@ public class GlobalGameData
     public MusicData musicData = new MusicData(); // 音乐和音效数据
     public E_MusicTriggerType currentMusicTriggerType; // 当前播放的背景音乐类型
     public CheckPointData checkPointData = new CheckPointData(); // 回溯点数据
+    public TimelineData timelineData = new TimelineData(); // 时间线触发数据
+}
+
+/// <summary>
+/// 记录所有的Timeline是否触发的数据类
+/// </summary>
+[System.Serializable]
+public class TimelineData
+{
+    public bool isTriggered1; // 1是否已经触发过
+    public bool isTriggered2; // 2是否已经触发过
+    public bool isTriggered3; // 3是否已经触发过
 }
 
 /// <summary>
@@ -80,6 +92,7 @@ public class MusicData
     public float soundVolume = 0.5f; // 音效音量
 }
 
+#region 第一章数据
 /// <summary>
 /// 玩家数据类
 /// </summary>
@@ -128,6 +141,7 @@ public class BlackFogData
     public int blackFogID; // 黑雾的ID
     public bool isDestroyed; // 黑雾是否已经被销毁
 }
+#endregion
 
 /// <summary>
 /// 位置数据结构

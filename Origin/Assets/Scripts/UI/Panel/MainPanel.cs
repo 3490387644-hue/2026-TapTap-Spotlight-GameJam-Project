@@ -60,7 +60,6 @@ public class MainPanel : BasePanel
         UIManager.Instance.HidePanel<MainPanel>();
         GameSceneManager.Instance.LoadScene(E_SceneType.GameScene01, () =>
         {
-            DialogManager.Instance.ShowType1Dialog(0,2);
             // GameSceneManager.Instance.PlayMusicByTriggerType(E_MusicTriggerType.Chapter2_Level1);
         });
     }

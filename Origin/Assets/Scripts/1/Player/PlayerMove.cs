@@ -12,6 +12,8 @@ public class PlayerMove : MonoBehaviour
     //玩家的动画状态机
     private Animator animator;
     private bool canMove;
+    public bool GetCanMove 
+    {set { canMove = value; } }
     private float move;
     private bool jump;
     // Start is called before the first frame update
@@ -24,6 +26,7 @@ public class PlayerMove : MonoBehaviour
         animator=GetComponent<Animator>();
         canMove = true;
         EventCenter.Instance.AddEventListener<bool>(E_EventType.DialogDoing, OnDialogDoing);
+        EventCenter.Instance.EventTrigger<PlayerMove>(E_EventType.Timeline1Register, this);
     }
 
     private void Update()
@@ -52,4 +55,6 @@ public class PlayerMove : MonoBehaviour
     {
         this.canMove = canMove;
     }
+
+
 }

@@ -92,6 +92,7 @@ public class GameDataMgr : BaseManager<GameDataMgr>
             },
             currentMusicTriggerType = GameSceneManager.Instance.currentMusicTriggerType,
             checkPointData = GameSceneManager.Instance.GetCheckPointData, // 保存当前场景的检查点位置数据
+            timelineData = GameSceneManager.Instance.GetTimelineData // 保存当前场景的时间线触发数据
         };
         JsonMgr.Instance.SaveData(globalGameData, "GlobalGameData", JsonType.JsonUtlity);
         JsonMgr.Instance.SaveData(typewritterDialogData, "TypewritterText", JsonType.LitJson);
@@ -187,7 +188,8 @@ public class GameDataMgr : BaseManager<GameDataMgr>
             globalGameData = new GlobalGameData();
         GameSceneManager.Instance.UpdateGlobalInfo(
             globalGameData.currentMusicTriggerType,
-            globalGameData.checkPointData);
+            globalGameData.checkPointData,
+            globalGameData.timelineData);
         typewritterDialogData = JsonMgr.Instance.LoadData<List<DialogData>>("TypewritterText");
         sceneObjectCollisionDialogData = JsonMgr.Instance.LoadData<List<DialogData>>("SceneObjectCollisionText");
         airwallTriggerDialogData = JsonMgr.Instance.LoadData<List<DialogData>>("AirwallTriggerText");

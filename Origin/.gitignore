@@ -107,3 +107,31 @@ InitTestScene*.unity*
 
 # 音乐和音效文件过大（单个最高数百MB），不纳入版本控制，保留在本地
 /Assets/Resources/Music/
+
+# 音频文件按扩展名兜底（含 .meta），防止被提交到任意目录
+*.wav
+*.wav.meta
+*.mp3
+*.mp3.meta
+*.ogg
+*.ogg.meta
+*.aiff
+*.aiff.meta
+*.aif
+*.aif.meta
+*.flac
+*.flac.meta
+*.m4a
+*.m4a.meta
+*.wma
+*.wma.meta
+*.opus
+*.opus.meta
+*.xm
+*.xm.meta
+*.mod
+*.mod.meta
+*.it
+*.it.meta
+*.s3m
+*.s3m.meta

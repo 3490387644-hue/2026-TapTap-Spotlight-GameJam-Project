@@ -35,6 +35,7 @@ public class PlayerMove3 : MonoBehaviour
     private Animator animator; //玩家动画状态机组件
     private PlayerType playerType; //玩家动画状态枚举
     private bool canMove; //玩家是否可以移动
+    public bool GetCanMove { set { canMove = value; } }
 
     private void Awake()
     {
@@ -48,6 +49,7 @@ public class PlayerMove3 : MonoBehaviour
         canMove = true;
         UpdateAnimate(PlayerType.IDLE); //初始默认为待机状态
         EventCenter.Instance.AddEventListener<bool>(E_EventType.DialogDoing, OnDialogDoing);
+        EventCenter.Instance.EventTrigger<PlayerMove3>(E_EventType.Timeline3Register, this);
     }
 
     // Update is called once per frame

@@ -34,14 +34,14 @@ public class ChangeSce : MonoBehaviour
         {
             GameSceneManager.Instance.LoadScene(sceneType, () =>
             {
-                DialogManager.Instance.ShowType1Dialog(2, 2);
+                
             });
         }
         else if(sceneType == E_SceneType.GameScene03)
         {
             GameSceneManager.Instance.LoadScene(sceneType, ()=>
             {
-                DialogManager.Instance.ShowType1Dialog(4);
+                
             });
         }
     }

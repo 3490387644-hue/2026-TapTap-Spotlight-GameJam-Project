@@ -20,6 +20,7 @@ public class PlayerMove2 : MonoBehaviour
     private float move;
     private bool jump;
     private bool canMove;
+    public bool GetCanMove{set{canMove=value;}}
     // Start is called before the first frame update
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class PlayerMove2 : MonoBehaviour
         animator = GetComponent<Animator>();
         canMove = true;
         EventCenter.Instance.AddEventListener<bool>(E_EventType.DialogDoing, OnDialogDoing);
+        EventCenter.Instance.EventTrigger<PlayerMove2>(E_EventType.Timeline2Register, this);
     }
 
     private void Update()
@@ -43,7 +45,7 @@ public class PlayerMove2 : MonoBehaviour
             return;
         }
         move = Input.GetAxis("Horizontal") * moveSpeed;
-        jump = Input.GetKey(KeyCode.Space);
+        jump = Input.GetKey(KeyCode.W);
         if (Input.GetKeyDown(KeyCode.F))
         {
             Rigidbody2D rb = GetComponent<Rigidbody2D>();

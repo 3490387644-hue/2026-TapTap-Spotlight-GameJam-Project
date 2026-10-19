@@ -38,10 +38,14 @@ public class Main : SingletonAutoMono<Main>
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && GameSceneManager.Instance.currentSceneType != E_SceneType.BeginScene && GameSceneManager.Instance.currentSceneType != E_SceneType.LoadingScene)
+        if (Input.GetKeyDown(KeyCode.Escape)
+        && !GameSceneManager.Instance.IsInputLocked
+        && GameSceneManager.Instance.currentSceneType != E_SceneType.BeginScene
+        && GameSceneManager.Instance.currentSceneType != E_SceneType.LoadingScene)
         {
             UIManager.Instance.ShowPanelAsync<GamePanel>();
         }
+
 
         // autoSaveTimer += Time.deltaTime;
         // if (autoSaveTimer >= AutoSaveInterval)

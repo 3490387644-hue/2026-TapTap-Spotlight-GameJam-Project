@@ -13,6 +13,10 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
 {
     public E_MusicTriggerType currentMusicTriggerType = E_MusicTriggerType.Chapter1_Level1; // 当前触发的音乐类型
     public GameObject player; // 玩家对象
+    private bool isInputLocked = false; // 全局输入锁
+    public bool IsInputLocked { get { return isInputLocked; } }
+    public void LockInput() { isInputLocked = true; }
+    public void UnlockInput() { isInputLocked = false; }
     public E_SceneType currentSceneType; // 当前场景类型
     #region 第一章数据
     private int greenAlgaeCount = 0; // 收集到的绿藻数量
@@ -29,6 +33,8 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
     public E_PlayerState GetPlayerState { get { return playerState; } } // 获取玩家状态
     private CheckPointData checkPointData = new CheckPointData(); // 回溯点数据
     public CheckPointData GetCheckPointData { get { return checkPointData; } } // 获取回溯点数据
+    private TimelineData timelineData = new TimelineData(); // 时间线触发数据
+    public TimelineData GetTimelineData { get { return timelineData; } }
     #endregion
 
     #region 第二章数据
@@ -59,14 +65,34 @@ public class GameSceneManager : SingletonAutoMono<GameSceneManager>
         });
     }
 
-    public void UpdateGlobalInfo(E_MusicTriggerType triggerType, CheckPointData checkPointData)
+    public void UpdateGlobalInfo(E_MusicTriggerType triggerType, CheckPointData checkPointData, TimelineData timelineData)
     {
         this.UpdateCurrentMusicTriggerType(triggerType);
         this.UpdateCheckPointData(checkPointData);
+        this.UpdateTimelineData(timelineData);
     }
     public void UpdateCheckPointData(CheckPointData checkPointData)
     {
         this.checkPointData = checkPointData;
+    }
+    public void UpdateTimelineData(TimelineData timelineData)
+    {
+        this.timelineData = timelineData;
+    }
+
+    public void UpdateTimeline1Info(bool isTriggered)
+    {
+        this.timelineData.isTriggered1 = isTriggered;
+    }
+
+    public void UpdateTimeline2Info(bool isTriggered)
+    {
+        this.timelineData.isTriggered2 = isTriggered;
+    }
+
+    public void UpdateTimeline3Info(bool isTriggered)
+    {
+        this.timelineData.isTriggered3 = isTriggered;
     }
 
     #region 第一章数据更新方法

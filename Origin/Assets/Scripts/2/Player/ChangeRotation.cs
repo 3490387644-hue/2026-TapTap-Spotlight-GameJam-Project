@@ -40,6 +40,8 @@ public class ChangeRotation : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameSceneManager.Instance.IsInputLocked)
+            return;
         hit1 = Physics2D.Raycast(point1.position, -transform.up, rayLength, mask);
         hit2 = Physics2D.Raycast(point2.position, -transform.up, rayLength, mask);
         avg=((hit1.normal+hit2.normal)/2).normalized;
@@ -58,12 +60,7 @@ public class ChangeRotation : MonoBehaviour
             }
             //this.transform.rotation = Quaternion.identity;
         }
-
-        //if(angle >= 60 && angle <= 90 && Input.GetKey(KeyCode.LeftShift))
-        //{
-        //    isWall= true;
-        //}
-
+        
         if (hit1 && hit2 && isWall)
         {
             float targetAngle = Mathf.Atan2(hit1.normal.y, hit1.normal.x) * Mathf.Rad2Deg - 90;
