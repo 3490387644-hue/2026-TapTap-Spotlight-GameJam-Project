@@ -8,17 +8,29 @@ public class PickGreenAlgae : MonoBehaviour
     //public float radius = 0.7f; //范围检测半径
     public int algaeNum = 0; //吸收绿藻的数量
     private static PickGreenAlgae instance;
-    public static PickGreenAlgae Instance=>instance;
+    public static PickGreenAlgae Instance => instance;
+    private bool isLarge = false; //玩家是否变大
+    private int lastNum = 0;
 
     private void Start()
     {
         instance = this;
     }
 
+    void OnEnable()
+    {
+        algaeNum = GameSceneManager.Instance.GetGreenAlgaeCount;
+        lastNum = algaeNum;
+        // 读档恢复时，也要立刻应用一次外观/弹跳状态
+        // GameSceneManager.Instance.ChangePlayerScale(GameDataMgr.Instance.gameData.playerData.playerState);
+    }
+
     private void Update()
     {
-        //当吸收绿藻数量达到五个时，玩家变大
-        if(algaeNum==5)
+        if (algaeNum == lastNum) return;   // 数量没变，什么都不做
+        lastNum = algaeNum;
+
+        if (algaeNum >= 5)
         {
             if(CharacterController2D.Instance.m_FacingRight)
             {
@@ -33,6 +45,9 @@ public class PickGreenAlgae : MonoBehaviour
         if(algaeNum==10)
         {
             glow.Instance.isGlow = true;
+            // 标记状态并应用（只触发这一次）
+            GameSceneManager.Instance.UpdatePlayerState(E_PlayerState.Large);
+            GameSceneManager.Instance.ChangePlayerScale(E_PlayerState.Large);
         }
     }
 

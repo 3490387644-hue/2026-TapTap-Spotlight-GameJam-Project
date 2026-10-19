@@ -1,0 +1,26 @@
+﻿[
+  {
+    "ID": 0,
+    "Text": "按住“W”跳跃",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 1,
+    "Text": "咦，这是什么？",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 2,
+    "Text": "按“S”键撞碎黑色障碍",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 3,
+    "Text": "按“E”键发光驱散黑色障碍",
+    "Type": 1,
+    "HasTriggered": false
+  }
+]

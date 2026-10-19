@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class UIManager
 {
@@ -18,8 +19,11 @@ public class UIManager
         //得到场景中的Canvas对象
         GameObject canvas = GameObject.Instantiate(ResMgr.Instance.Load<GameObject>("UI/Canvas"));
         canvasTrans = canvas.transform;
-        //过场景不删除Canvas对象
+        //过场景不删除Canvas对象 同时保证了挂载Canvas下的面板也不会被移除
         GameObject.DontDestroyOnLoad(canvasTrans.gameObject);
+
+        GameObject eventSystem = GameObject.Instantiate(ResMgr.Instance.Load<GameObject>("UI/EventSystem"));
+        GameObject.DontDestroyOnLoad(eventSystem);
     }
    
     //显示面板
@@ -122,6 +126,7 @@ public class UIManager
                     }
                     else
                         panelDic[panelName].gameObject.SetActive(false);
+                    callback?.Invoke(panel);
                 });
                 return;
             }
@@ -135,7 +140,6 @@ public class UIManager
 
         }
         callback?.Invoke(panel);
-        Time.timeScale = 1f; // 恢复游戏时间缩放
     }
 
     //获得面板

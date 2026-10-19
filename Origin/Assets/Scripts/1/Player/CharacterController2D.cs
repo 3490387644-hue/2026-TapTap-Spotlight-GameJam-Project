@@ -3,8 +3,6 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
-    private static CharacterController2D instance;
-    public static CharacterController2D Instance=>instance;
     public float jumpForce = 400f;                          // 弹跳力
     public bool canAirControl = false;                      // 在空中时，是否能控制
     public LayerMask groundMask;                            // 定义哪一个Layer是地面
@@ -35,7 +33,6 @@ public class CharacterController2D : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
@@ -74,7 +71,6 @@ public class CharacterController2D : MonoBehaviour
             OnAirEvent.Invoke();
         }
     }
-
 
     public void Move(float move, bool jump)
     {
@@ -125,5 +121,18 @@ public class CharacterController2D : MonoBehaviour
 
         // 缩放的x轴乘以-1，图片就水平翻转了
         transform.localScale = Vector3.Scale(transform.localScale, new Vector3(-1, 1, 1));
+    }
+
+    public void OnLandSound()
+    {
+        Debug.Log("角色落地音效");
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.LandSound, false, false);
+    }
+
+    public void OnJumpSound()
+    {
+        // 发出跳跃音效
+        Debug.Log("角色跳跃音效");
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.JumpSound, false, false);
     }
 }

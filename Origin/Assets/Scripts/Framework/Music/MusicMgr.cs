@@ -13,15 +13,38 @@ public class MusicMgr : BaseManager<MusicMgr>
 
     //背景音乐大小
     private float bkMusicValue = 0.5f;
+    public float GetBkMusicValue
+    {
+        get{return bkMusicValue;}
+    }
 
     //管理正在播放的音效
     private List<AudioSource> soundList = new List<AudioSource>();
 
     //音效音量大小
     private float soundValue = 0.5f;
+    public float GetSoundValue
+    {
+        get{return soundValue;}
+    }
 
     //音效是否在播放
     private bool soundIsPlay = true;
+
+    //背景音乐预加载缓存 提前加载好背景音乐切片 避免切换音乐时卡顿
+    private Dictionary<string, AudioClip> bkMusicCache = new Dictionary<string, AudioClip>();
+    //正在预加载中的背景音乐 防止重复加载
+    private HashSet<string> bkMusicLoading = new HashSet<string>();
+
+    // 更新音乐和音效的值
+    public void UpdateData()
+    {
+        if(!GameDataMgr.Instance.gameData1.hasSaveData)
+            return; // 如果没有存档数据 就不更新音乐和音效的值 直接使用默认值
+        bkMusicValue = GameDataMgr.Instance.globalGameData.musicData.musicVolume;
+        soundValue = GameDataMgr.Instance.globalGameData.musicData.soundVolume;
+        EventCenter.Instance.EventTrigger<float>(E_EventType.SoundValueChanged, soundValue);
+    }
 
     //播放背景音乐
     public void PlayBKMusic(string name)
@@ -36,13 +59,55 @@ public class MusicMgr : BaseManager<MusicMgr>
             bkMusic = obj.AddComponent<AudioSource>();
         }
 
-        //根据传入的背景音乐名字 来播放背景音乐
-        ABResMgr.Instance.LoadResAsync<AudioClip>("music", name, (clip) =>
+        //如果已经预加载好 直接切换 不会卡顿
+        if(bkMusicCache.TryGetValue(name, out AudioClip cachedClip))
         {
+            bkMusic.Stop();
+            bkMusic.clip = cachedClip;
+            bkMusic.loop = true;
+            bkMusic.volume = bkMusicValue;
+            bkMusic.Play();
+            return;
+        }
+
+        //还没有预加载好 异步加载 加载完成后再切换（避免提前切断旧音乐造成卡顿/断音）
+        //根据传入的背景音乐名字 来播放背景音乐
+        // ABResMgr.Instance.LoadResAsync<AudioClip>("music", name, (clip) =>
+        // {
+        //     bkMusic.clip = clip;
+        //     bkMusic.loop = true;
+        //     bkMusic.volume = bkMusicValue;
+        //     bkMusic.Play();
+        // });
+        // 因为用不到AB包 这边用ResMgr进行音乐和音效的加载
+        ResMgr.Instance.LoadRes<AudioClip>(name, true, (clip)=>
+        {
+            if(clip == null)
+                return;
+            if(!bkMusicCache.ContainsKey(name))
+                bkMusicCache[name] = clip;
+            bkMusic.Stop();
             bkMusic.clip = clip;
             bkMusic.loop = true;
             bkMusic.volume = bkMusicValue;
             bkMusic.Play();
+        });
+    }
+
+    /// <summary>
+    /// 预加载背景音乐 在加载场景时提前调用 避免切换音乐时卡顿
+    /// </summary>
+    /// <param name="name">背景音乐名字</param>
+    public void PreloadBKMusic(string name)
+    {
+        if(bkMusicCache.ContainsKey(name) || bkMusicLoading.Contains(name))
+            return;
+        bkMusicLoading.Add(name);
+        ResMgr.Instance.LoadRes<AudioClip>(name, true, (clip)=>
+        {
+            bkMusicLoading.Remove(name);
+            if(clip != null && !bkMusicCache.ContainsKey(name))
+                bkMusicCache[name] = clip;
         });
     }
 
@@ -102,13 +167,32 @@ public class MusicMgr : BaseManager<MusicMgr>
     /// <param name="isLoop">是否循环</param>
     /// <param name="isSync">是否同步加载</param>
     /// <param name="callBack">加载结束后的回调</param>
-    public void PlaySound(string name,bool isLoop=false,bool isSync=false,UnityAction<AudioSource> callBack=null)
+    public void PlaySound(string name,bool isLoop=false,bool isAsync=false,UnityAction<AudioSource> callBack=null)
     {
         //加载音效资源 进行播放
-        ABResMgr.Instance.LoadResAsync<AudioClip>("sound", name, (clip) =>
+        // ABResMgr.Instance.LoadResAsync<AudioClip>("sound", name, (clip) =>
+        // {
+        //     //从缓存池中取出音效对象得到对应组件
+        //     AudioSource source=PoolMgr.Instance.GetObj("sound/soundObj").GetComponent<AudioSource>();
+        //     //如果取出来的音效是之前正在使用的 我们先停止它
+        //     source.Stop();
+        //     source.clip = clip;
+        //     source.loop = isLoop;
+        //     source.volume = soundValue;
+        //     source.Play();
+        //     //存储容器 用于记录 方便之后判断是否停止
+        //     //由于从缓存池中取出对象 有可能取出一个之前正在使用的（超上限时）
+        //     //所以我们需要判断 容器中没有记录再去记录 不要重复去添加即可
+        //     if(!soundList.Contains(source))
+        //         soundList.Add(source);
+        //     //传递给外部使用
+        //     callBack?.Invoke(source);
+        // },isSync);
+
+        ResMgr.Instance.LoadRes<AudioClip>(name, isAsync, (clip)=>
         {
             //从缓存池中取出音效对象得到对应组件
-            AudioSource source=PoolMgr.Instance.GetObj("sound/soundObj").GetComponent<AudioSource>();
+            AudioSource source=PoolMgr.Instance.GetObj("Prefabs/Sound/SoundAudioObj").GetComponent<AudioSource>();
             //如果取出来的音效是之前正在使用的 我们先停止它
             source.Stop();
             source.clip = clip;
@@ -122,7 +206,7 @@ public class MusicMgr : BaseManager<MusicMgr>
                 soundList.Add(source);
             //传递给外部使用
             callBack?.Invoke(source);
-        },isSync);
+        });
     }
 
     /// <summary>
@@ -155,6 +239,7 @@ public class MusicMgr : BaseManager<MusicMgr>
         {
             soundList[i].volume = v;
         }
+        EventCenter.Instance.EventTrigger<float>(E_EventType.SoundValueChanged, v);
     }
 
     /// <summary>
