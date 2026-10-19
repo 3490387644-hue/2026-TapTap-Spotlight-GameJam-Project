@@ -31,15 +31,15 @@ public class MagmaTrigger : MonoBehaviour
         DeadChange.Instance.DarkChange();
         yield return new WaitForSeconds(1.2f);
         obj.GetComponent<Rigidbody2D>().velocity=Vector2.zero;
-        obj.transform.position = CheckpointMgr.Instance.GetCheckPoint().transform.position;
-            collision.transform.position=GameSceneManager.Instance.GetCheckPointData.checkPointPos.ToVector3(); // 回到最新的复活点
-            Debug.Log("MagmaTrigger触发: " + this.gameObject.name);
-            if(!hasTriggered)
-            {
-                EventCenter.Instance.EventTrigger<bool>(E_EventType.MagmaTrigger, true); // 通知所有监听者岩浆触发事件
-                // 显示对话面板
-                DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 0, dialogText);
-            }
+        obj.transform.position = CheckpointMgr.Instance.GetCheckPoint().ToVector3();
+        obj.transform.position=GameSceneManager.Instance.GetCheckPointData.checkPointPos.ToVector3(); // 回到最新的复活点
+        Debug.Log("MagmaTrigger触发: " + this.gameObject.name);
+        if(!hasTriggered)
+        {
+            EventCenter.Instance.EventTrigger<bool>(E_EventType.MagmaTrigger, true); // 通知所有监听者岩浆触发事件
+            // 显示对话面板
+            DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 0, dialogText);
+        }
     }
 
     void OnDestroy()
