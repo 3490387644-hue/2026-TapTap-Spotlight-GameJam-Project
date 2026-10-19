@@ -5,7 +5,7 @@ using UnityEngine;
 public class StonePut : MonoBehaviour
 {
     public bool isCanPutStone=false;
-    private GameObject stoneObj; //???·???ó
+    private GameObject stoneObj; // 石头对象
     // Start is called before the first frame update
     void Start()
     {

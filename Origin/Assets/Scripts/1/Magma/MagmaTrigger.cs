@@ -17,7 +17,11 @@ public class MagmaTrigger : MonoBehaviour
     {
         if(collision.gameObject.tag=="Player")
         {
-            collision.transform.position=CheckpointMgr.Instance.GetCheckPoint().ToVector3(); // 回到最新的复活点
+            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+            if (rb != null)
+                rb.position = CheckpointMgr.Instance.GetCheckPoint().ToVector3(); // 回到最新的复活点
+            else
+                collision.transform.position = CheckpointMgr.Instance.GetCheckPoint().ToVector3();
             Debug.Log("MagmaTrigger触发: " + this.gameObject.name);
             if(!hasTriggered)
             {

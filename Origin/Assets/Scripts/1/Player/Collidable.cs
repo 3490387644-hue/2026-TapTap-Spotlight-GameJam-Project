@@ -11,14 +11,14 @@ public class Collidable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         //按'S'键撞击石头 当石头需要撞击次数为0时，石头裂开
-        if (Input.GetKeyDown(KeyCode.S))
+        if(Input.GetKeyDown(KeyCode.S))
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(this.transform.position, radius, m_Mask);
             for (int i = 0; i < colliders.Length; i++)
@@ -28,20 +28,18 @@ public class Collidable : MonoBehaviour
                     colliders[i].gameObject.GetComponent<RockNum>().collidableNum--;
                     if (colliders[i].gameObject.GetComponent<RockNum>().collidableNum == 0)
                     {
-                        RockNum rock = colliders[i].gameObject.GetComponent<RockNum>();
-                        if (rock.collidableNum == 0)
-                        {
-                            var rd = GameDataMgr.Instance.gameData1.rockDataList.Find(r => r.rockID == rock.rockID);
-                            if (rd != null) rd.isBreak = true;   // 标记已碎
-                        }
                         Vector3 p = colliders[i].transform.position;
                         quaternion r = colliders[i].transform.rotation;
-                        // 播放岩石破裂音效
-                        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1RockBreakSound, false, true);
                         colliders[i].gameObject.GetComponent<Animator>().SetTrigger("isCollidable"); //播放石头碎裂动画
-                        Destroy(colliders[i].gameObject, 1.5f);
+                        var rockData = GameSceneManager.Instance.GetSceneRockDataList.Find(r => r.rockID == colliders[i].gameObject.GetComponent<RockNum>().rockID); //标记石头已碎
+                        if (rockData != null)
+                            rockData.isBreak = true;
+                        Destroy(colliders[i].gameObject,1.5f);
                         if (colliders[i].gameObject.GetComponent<RockNum>().isBornAlgae)
                             StartCoroutine(myCoroutine(colliders[i].gameObject));
+                        if(colliders[i].gameObject.GetComponent<RockNum>().isBornFog)
+                            StartCoroutine(myCoroutine2(colliders[i].gameObject));
+
                     }
                 }
             }
@@ -51,7 +49,15 @@ public class Collidable : MonoBehaviour
     IEnumerator myCoroutine(GameObject obj)
     {
         yield return new WaitForSeconds(1.3f);
-        AlgaeBorn.Instance.AlgaeCreate(obj);
+        AlgaeBorn.Instance.AlgaeCreate(obj, 1000 + obj.GetComponent<RockNum>().rockID);
+    }
+
+    IEnumerator myCoroutine2(GameObject obj)
+    {
+        Vector3 p=obj.transform.position+Vector3.up;
+        quaternion r=obj.transform.rotation;
+        yield return new WaitForSeconds(1.35f);
+        GameObject fog = Instantiate(ResMgr.Instance.Load<GameObject>("Prefabs/Fogs/Fog"),p,r);
     }
 
     // Gizmos绘制范围

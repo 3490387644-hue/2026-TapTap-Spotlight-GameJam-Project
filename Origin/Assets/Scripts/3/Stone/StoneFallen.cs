@@ -34,7 +34,9 @@ public class StoneFallen : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter3MeteoriteImpactSound, false, true);
             collision.gameObject.GetComponent<PlayerMove3>().isFly = false;
+            GameSceneManager.Instance.UpdateIsFlying(false); // 通知GameSceneManager玩家退出飞行状态
             collision.gameObject.GetComponent<Rigidbody2D>().gravityScale = 1;
             if(!hasTriggered)
             {

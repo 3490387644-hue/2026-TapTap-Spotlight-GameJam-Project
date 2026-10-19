@@ -39,8 +39,8 @@ public class MusicMgr : BaseManager<MusicMgr>
     // 更新音乐和音效的值
     public void UpdateData()
     {
-        if(!GameDataMgr.Instance.gameData1.hasSaveData)
-            return; // 如果没有存档数据 就不更新音乐和音效的值 直接使用默认值
+        // 音量始终从全局存档读取（globalGameData 缺省时默认为 0.5），
+        // 不能拿 gameData1.hasSaveData 做门控，否则第一章无存档时音量无法恢复
         bkMusicValue = GameDataMgr.Instance.globalGameData.musicData.musicVolume;
         soundValue = GameDataMgr.Instance.globalGameData.musicData.soundVolume;
         EventCenter.Instance.EventTrigger<float>(E_EventType.SoundValueChanged, soundValue);
@@ -191,6 +191,8 @@ public class MusicMgr : BaseManager<MusicMgr>
 
         ResMgr.Instance.LoadRes<AudioClip>(name, isAsync, (clip)=>
         {
+            if(clip == null)
+                return; // 音频加载失败，直接返回避免空引用
             //从缓存池中取出音效对象得到对应组件
             AudioSource source=PoolMgr.Instance.GetObj("Prefabs/Sound/SoundAudioObj").GetComponent<AudioSource>();
             //如果取出来的音效是之前正在使用的 我们先停止它

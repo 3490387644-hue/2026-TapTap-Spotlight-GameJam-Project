@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class FireOut : MonoBehaviour
 {
-    public float w; //检测范围的宽
-    public float h; //检测范围的高
-    public float angle; //检测角度
-    public LayerMask mask; //范围检测层
-    public Vector3 offset; //检测中心点偏移原点的位置
-    public float eachTime; //火焰喷发时间间隔
-    private float lastTime; //上次喷发时间
-    private bool hasTriggered; //是否触发喷发
+    public float w; //检测范围宽度
+    public float h; //检测范围高度
+    public float angle; //旋转角度
+    public LayerMask mask; //检测层级
+    public Vector3 offset; //检测中心相对原点的偏移位置
+    public float eachTime; //火焰喷发间隔
+    private float lastTime; //上次火焰喷发时间
+    private bool hasTriggered; //是否触发火焰喷发
     private Animator animator;
 
     void Start()
     {
-        hasTriggered = GameDataMgr.Instance.sceneObjectCollisionDialogData[12].HasTriggered; //读取触发状态，防止重复触发
+        hasTriggered = GameDataMgr.Instance.sceneObjectCollisionDialogData[12].HasTriggered; //读取触发状态，避免重复触发
         EventCenter.Instance.AddEventListener<bool>(E_EventType.FireOutTrigger, OnFireOutTrigger);
         animator = GetComponent<Animator>();
-        lastTime = Time.time;
+        lastTime = Time.time; //记录上次火焰喷发时间
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class FireOut : MonoBehaviour
         if (Time.time - lastTime >= eachTime)
         {
             animator.SetTrigger("isFire");
-            lastTime = Time.time; //重置上次喷发时间
+            lastTime = Time.time; //记录上次火焰喷发时间
         }
     }
 
@@ -39,7 +39,7 @@ public class FireOut : MonoBehaviour
 
     public void OnFireOut()
     {
-        
+        //只处理玩家触发
     }
 
     IEnumerator myCoroutine()
@@ -47,7 +47,7 @@ public class FireOut : MonoBehaviour
         Collider2D collider = Physics2D.OverlapBox(
             this.transform.position + offset, new Vector2(w, h), angle, mask);
 
-        // 只有玩家碰到火才触发
+        //只处理玩家触发
         if (collider != null && collider.gameObject.CompareTag("Player"))
         {
             DeadChange.Instance.DarkChange();
@@ -60,8 +60,11 @@ public class FireOut : MonoBehaviour
                 DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 12);
             }
 
-            collider.gameObject.transform.position =
-                BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
+            Rigidbody2D rb = collider.gameObject.GetComponent<Rigidbody2D>();
+            if (rb != null)
+                rb.position = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
+            else
+                collider.gameObject.transform.position = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
             if (collider.gameObject.transform.localScale !=
                 BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].localScale)
             {
@@ -81,7 +84,7 @@ public class FireOut : MonoBehaviour
     private void OnFireOutTrigger(bool isTriggered)
     {
         hasTriggered = isTriggered;
-        GameDataMgr.Instance.sceneObjectCollisionDialogData[12].HasTriggered = true; // 写回触发状态，防止重复触发
+        GameDataMgr.Instance.sceneObjectCollisionDialogData[12].HasTriggered = true; //记录触发状态，避免重复触发
     }
 
     private void OnDrawGizmosSelected()

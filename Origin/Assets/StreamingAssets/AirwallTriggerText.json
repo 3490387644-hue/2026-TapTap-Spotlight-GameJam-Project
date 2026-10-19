@@ -19,7 +19,7 @@
   },
   {
     "ID": 3,
-    "Text": "按“E”键发光驱散黑色障碍",
+    "Text": "找到了！时间缝隙…终于可以回家了",
     "Type": 1,
     "HasTriggered": false
   },
@@ -49,12 +49,18 @@
   },
   {
     "ID": 8,
-    "Text": "飞过去…就可以回家了吧…",
+    "Text": "按“G”键推下落石",
     "Type": 1,
     "HasTriggered": false
   },
   {
     "ID": 9,
+    "Text": "飞过去…就可以回家了吧…",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 10,
     "Text": "终于、终于到了。这次我能回家吗？",
     "Type": 1,
     "HasTriggered": false

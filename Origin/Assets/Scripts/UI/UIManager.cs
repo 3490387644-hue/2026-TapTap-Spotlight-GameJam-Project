@@ -68,6 +68,10 @@ public class UIManager
         
         ResMgr.Instance.LoadAsync<GameObject>(PathUtil.PanelPath + panelName, (obj)=>
         {
+            if (obj == null)
+                return; // 资源加载失败，直接返回
+            if (panelDic.ContainsKey(panelName))
+                return; // 异步期间已被其它调用创建，避免重复Add
             GameObject panelObj = GameObject.Instantiate(obj);
             panelObj.transform.SetParent(canvasTrans, false);
             T panel = panelObj.GetComponent<T>();
@@ -112,33 +116,35 @@ public class UIManager
     public void HidePanel<T>(bool isFade = true ,UnityAction<T> callback = null) where T : BasePanel
     {
         string panelName = typeof(T).Name;
-        T panel = panelDic[panelName] as T;
-        if (panelDic.ContainsKey(panelName))
+        if (!panelDic.TryGetValue(panelName, out BasePanel basePanel))
         {
-            if (isFade)
-            {
-                panelDic[panelName].HideMe(() =>
-                {
-                    if (panel.isDestroy)
-                    {
-                        GameObject.Destroy(panelDic[panelName].gameObject);
-                        panelDic.Remove(panelName);
-                    }
-                    else
-                        panelDic[panelName].gameObject.SetActive(false);
-                    callback?.Invoke(panel);
-                });
-                return;
-            }
-            if (panel.isDestroy)
-            {
-                GameObject.Destroy(panelDic[panelName].gameObject);
-                panelDic.Remove(panelName);
-            }
-            else
-                panelDic[panelName].gameObject.SetActive(false);
-
+            callback?.Invoke(null); // 面板不存在时直接回调，避免索引越界异常
+            return;
         }
+        T panel = basePanel as T;
+        if (isFade)
+        {
+            panelDic[panelName].HideMe(() =>
+            {
+                if (panel.isDestroy)
+                {
+                    GameObject.Destroy(panelDic[panelName].gameObject);
+                    panelDic.Remove(panelName);
+                }
+                else
+                    panelDic[panelName].gameObject.SetActive(false);
+                callback?.Invoke(panel);
+            });
+            return;
+        }
+        if (panel.isDestroy)
+        {
+            GameObject.Destroy(panelDic[panelName].gameObject);
+            panelDic.Remove(panelName);
+        }
+        else
+            panelDic[panelName].gameObject.SetActive(false);
+
         callback?.Invoke(panel);
     }
 

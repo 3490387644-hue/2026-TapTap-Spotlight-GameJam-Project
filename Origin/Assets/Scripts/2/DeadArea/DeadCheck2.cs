@@ -31,7 +31,11 @@ public class DeadCheck2 : MonoBehaviour
     {
         DeadChange.Instance.DarkChange();
         yield return new WaitForSeconds(2);
-        obj.transform.position = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
+        Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+        if (rb != null)
+            rb.position = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
+        else
+            obj.transform.position = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].position;
         obj.transform.localScale = BornPointMgr.Instance.bornPoints[BornPointMgr.Instance.index].localScale;
     }
 }

@@ -16,10 +16,11 @@ public class SingletonAutoMono<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (applicationIsQuitting)
-                return null;
             if (instance == null)
             {
+                //退出游戏时禁止新建实例（场景对象已在销毁流程中）
+                if (applicationIsQuitting)
+                    return null;
                 //动态创建 动态挂载
                 //在场景上创建空物体
                 GameObject obj = new GameObject();

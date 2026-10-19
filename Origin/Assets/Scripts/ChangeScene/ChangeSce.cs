@@ -28,18 +28,20 @@ public class ChangeSce : MonoBehaviour
 
     private void ChangeScene()
     {
+        if (GameSceneManager.Instance.player != null)
+            GameDataMgr.Instance.SaveGameData();
         if (sceneType == E_SceneType.GameScene02)
         {
             GameSceneManager.Instance.LoadScene(sceneType, () =>
             {
-                DialogManager.Instance.ShowType1Dialog(1, 2);
+                DialogManager.Instance.ShowType1Dialog(2, 2);
             });
         }
         else if(sceneType == E_SceneType.GameScene03)
         {
             GameSceneManager.Instance.LoadScene(sceneType, ()=>
             {
-                DialogManager.Instance.ShowType1Dialog(3);
+                DialogManager.Instance.ShowType1Dialog(4);
             });
         }
     }

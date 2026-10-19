@@ -22,11 +22,22 @@ public enum E_SoundTriggerType
 {
     Chapter1MagmaSound, // 岩浆
     ChapterGreenAlgaeAbsorbSound, // 绿藻
-    ChapterJumpSound, // 跳跃
+    Chapter1JumpSound, // 跳跃
     Chapter1FootstepSound, // 脚步声
     Chapter1LandSound, // 落地
     Chapter1RockBreakSound,
-    
+    Chapter2BugTalks,
+    Chapter2ClimbingSound, // 攀爬声
+    Chapter2JumpLandingSound, // 跳跃落地声
+    Chapter2JumpSound, // 跳跃声
+    Chapter2WalkSound, // 行走声
+    Chapter3FlySound, // 飞行声
+    Chapter3FlyLandingSound, // 飞行落地声
+    Chapter3LowStaminaWarning, // 低体力警告声
+    Chapter3VineBreakSound, // 藤蔓断裂声
+    Chapter3MeteoriteImpactSound, // 陨石撞击声
+    Chapter3AirflowSound, // 上升气流声
+    Chapter3Walk1, // 行走声1
 }
 
 public enum E_PlayerState
@@ -35,6 +46,7 @@ public enum E_PlayerState
     Large, // 变大状态
 }
 
+[System.Serializable]
 public class GlobalGameData
 {
     public E_SceneType sceneType = E_SceneType.BeginScene; // 场景类型
@@ -52,6 +64,7 @@ public class GameData1
 {
     public bool hasSaveData = false; // 是否有存档数据
     public int greenAlgaeCollectedCount; // 已经收集的绿藻数量
+    public List<GreenAlgaeData> greenAlgaeDataList = new List<GreenAlgaeData>(); // 绿藻逐株收集状态列表
     public PlayerData1 playerData = new PlayerData1(); // 玩家数据
     public List<RockData> rockDataList = new List<RockData>(); // 特殊岩石数据列表
     public List<BlackFogData> blackFogDataList = new List<BlackFogData>(); // 黑雾数据列表
@@ -88,6 +101,16 @@ public class RockData
 }
 
 /// <summary>
+/// 绿藻逐株收集数据类
+/// </summary>
+[System.Serializable]
+public class GreenAlgaeData
+{
+    public int algaeID; // 绿藻的ID
+    public bool isCollected; // 绿藻是否已经被收集
+}
+
+/// <summary>
 /// 回溯点数据类
 /// </summary>
 [System.Serializable]
@@ -107,7 +130,7 @@ public class BlackFogData
 }
 
 /// <summary>
-/// 玩家位置数据结构
+/// 位置数据结构
 /// </summary>
 [System.Serializable]
 public class PositionData
@@ -136,6 +159,7 @@ public class GameData2
 {
     public bool hasSaveData = false; // 是否有存档数据
     public PlayerData2 playerData = new PlayerData2(); // 玩家数据
+    public int cameraShapeIndex; // 当前相机边界范围索引
 }
 
 [System.Serializable]
@@ -164,6 +188,7 @@ public class GameData3
 public class PlayerData3
 {
     public PositionData playerPos; // 玩家位置数据
+    public bool isFlying; // 玩家是否处于飞行状态
 }
 
 /// <summary>

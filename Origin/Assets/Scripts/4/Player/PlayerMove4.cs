@@ -41,6 +41,8 @@ public class PlayerMove4 : MonoBehaviour
     {
         if (!canMove)
         {
+            move = 0;
+            jump = false;
             return;
         }
 

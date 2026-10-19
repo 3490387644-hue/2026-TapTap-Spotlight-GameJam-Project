@@ -17,6 +17,7 @@ public class StoneFallen2 : MonoBehaviour
 
     public void isOut()
     {
+        GameSceneManager.Instance.GetStoneData.isStoneFallen = true; // ´æµµÊ¯Í·ÒÑ×¹Âä
         vine.GetComponent<Animator>().SetTrigger("isOut");
         Destroy(vine, 2);
     }

@@ -65,6 +65,7 @@ public class ShadowSkill : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && Shadow2 != null)
         {
             player.isFly = true;
+            GameSceneManager.Instance.UpdateIsFlying(true); // 通知GameSceneManager玩家进入飞行状态
             this.transform.position = Shadow2.transform.position;
             if (this.transform.localScale != Shadow2.transform.localScale)
             {

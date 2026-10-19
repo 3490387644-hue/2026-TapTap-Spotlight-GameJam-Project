@@ -31,13 +31,13 @@
   },
   {
     "ID": 5,
-    "Text": "似乎有大事要发生",
+    "Text": "我好像变大了一圈",
     "Type": 1,
     "HasTriggered": false
   },
   {
     "ID": 6,
-    "Text": "我好像变大了一圈",
+    "Text": "有什么要发生了",
     "Type": 1,
     "HasTriggered": false
   },
@@ -80,6 +80,12 @@
   {
     "ID": 13,
     "Text": "当遇到爬不过去的墙时，可以长按\"Shift\"键配合进行攀爬",
+    "Type": 1,
+    "HasTriggered": false
+  },
+  {
+    "ID": 14,
+    "Text": "按“E”键发光驱散黑色障碍",
     "Type": 1,
     "HasTriggered": false
   }

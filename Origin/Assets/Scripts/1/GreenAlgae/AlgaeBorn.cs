@@ -18,23 +18,26 @@ public class AlgaeBorn : MonoBehaviour
 
     void Start()
     {
-        //为场景上的所有绿藻生成点随机生成不同的绿藻
-        for(int i=GameSceneManager.Instance.GetGreenAlgaeCount;i<AlgaePoint.Count;i++)
+        //为场景上的绿藻生成点随机生成不同的绿藻，只生成未被收集的那几株
+        for(int i=0;i<AlgaePoint.Count;i++)
         {
-            AlgaeCreate(AlgaePoint[i]);
+            if (!GameSceneManager.Instance.IsGreenAlgaeCollected(i))
+                AlgaeCreate(AlgaePoint[i], i);
         }
-        
     }
 
     //绿藻生成方法
-    public void AlgaeCreate(GameObject obj)
+    public void AlgaeCreate(GameObject obj, int algaeID)
     {
         int nowNum = Random.Range(0, 3);
         while(nowNum==lastNum)
         {
             nowNum = Random.Range(0, 3);
         }
-        Instantiate(AlgaeType[nowNum], obj.transform.position,obj.transform.rotation);
+        GameObject algae = Instantiate(AlgaeType[nowNum], obj.transform.position,obj.transform.rotation);
+        GreenAlgae ga = algae.GetComponent<GreenAlgae>();
+        if (ga != null)
+            ga.algaeID = algaeID;
         lastNum = nowNum;
     }
 }

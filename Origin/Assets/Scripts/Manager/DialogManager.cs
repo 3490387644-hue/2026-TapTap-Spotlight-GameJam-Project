@@ -64,69 +64,85 @@ public class DialogManager : SingletonAutoMono<DialogManager>
     {
         nowDialogIndex = dialogIndex;
         EventCenter.Instance.EventTrigger<bool>(E_EventType.DialogDoing, false); // 禁止玩家移动
-        yield return new WaitForSeconds(1f); // 等待0.5秒后开始显示对话
-        isDialogFinished = false;
-        E_DialogFuncType dialogType;
-        while (dialogCount > 0)
+        try
         {
-            dialogType = (E_DialogFuncType)GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].Type;
-            if (dialogType != E_DialogFuncType.Type1)
+            yield return new WaitForSeconds(1f); // 等待0.5秒后开始显示对话
+            isDialogFinished = false;
+            E_DialogFuncType dialogType;
+            while (dialogCount > 0)
             {
-                Debug.Log($"当前对话类型: Type1 已结束");
-                break;
-            }
+                // 越界/空数据保护，避免索引异常导致移动锁无法恢复
+                if (GameDataMgr.Instance.typewritterDialogData == null ||
+                    nowDialogIndex < 0 || nowDialogIndex >= GameDataMgr.Instance.typewritterDialogData.Count)
+                {
+                    Debug.LogWarning($"对话索引越界：{nowDialogIndex}");
+                    break;
+                }
+                dialogType = (E_DialogFuncType)GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].Type;
+                if (dialogType != E_DialogFuncType.Type1)
+                {
+                    Debug.Log($"当前对话类型: Type1 已结束");
+                    break;
+                }
 
-            // 测试阶段 均加载到dialogText1中
-            string fullText = GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].Text;
-            GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].HasTriggered = true; // 标记当前文本已触发
-            dialogPanel.dialogText1.text = "";
-            // 实现打字机效果
-            for (int i = 0; i < fullText.Length; i++)
-            {
-                dialogPanel.dialogText1.text += fullText[i];
-                yield return new WaitForSeconds(0.05f); // 每个字母间隔0.05秒
-            }
+                // 测试阶段 均加载到dialogText1中
+                string fullText = GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].Text;
+                GameDataMgr.Instance.typewritterDialogData[nowDialogIndex].HasTriggered = true; // 标记当前文本已触发
+                dialogPanel.dialogText1.text = "";
+                // 实现打字机效果
+                for (int i = 0; i < fullText.Length; i++)
+                {
+                    dialogPanel.dialogText1.text += fullText[i];
+                    yield return new WaitForSeconds(0.05f); // 每个字母间隔0.05秒
+                }
 
-            // yield return new WaitForSeconds(1f); // 等待1秒后显示提示
-            dialogPanel.tip1.gameObject.SetActive(true);
-            while (!Input.anyKeyDown)
-            {
-                yield return null;
+                // yield return new WaitForSeconds(1f); // 等待1秒后显示提示
+                dialogPanel.tip1.gameObject.SetActive(true);
+                while (!Input.anyKeyDown)
+                {
+                    yield return null;
+                }
+                nowDialogIndex++;
+                dialogCount--;
+                dialogPanel.tip1.gameObject.SetActive(false);
             }
-            nowDialogIndex++;
-            dialogCount--;
-            dialogPanel.tip1.gameObject.SetActive(false);
+            // 对话结束后切换面板
+            UIManager.Instance.HidePanel<DialogPanel>(true, (panel) =>
+            {
+                isDialogFinished = true;
+                // UIManager.Instance.ShowPanelAsync<MainPanel>();
+                // // 回调函数
+                ShowFirstDialogAfterEnterScene();
+            });
         }
-        // 对话结束后切换面板
-        UIManager.Instance.HidePanel<DialogPanel>(true, (panel) =>
+        finally
         {
-            isDialogFinished = true;
-            // UIManager.Instance.ShowPanelAsync<MainPanel>();
-            // // 回调函数
-            ShowFirstDialogAfterEnterScene();
-            EventCenter.Instance.EventTrigger<bool>(E_EventType.DialogDoing, true); // 允许玩家移动
-        });
+            EventCenter.Instance.EventTrigger<bool>(E_EventType.DialogDoing, true); // 允许玩家移动，保证锁一定释放
+        }
     }
 
     private void ShowFirstDialogAfterEnterScene()
     {
         E_SceneType currentScene = GameSceneManager.Instance.currentSceneType;
+        List<DialogData> dialogList = GameDataMgr.Instance.sceneObjectCollisionDialogData;
+        if (dialogList == null)
+            return;
         switch(currentScene)
         {
             case E_SceneType.GameScene01:
-                if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[0].HasTriggered)
+                if(dialogList.Count > 0 && !dialogList[0].HasTriggered)
                 {
                     DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 0);
                 }
                 break;
             case E_SceneType.GameScene02:
-                if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[13].HasTriggered)
+                if(dialogList.Count > 13 && !dialogList[13].HasTriggered)
                 {
                     DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 13);
                 }
                 break;
             case E_SceneType.GameScene03:
-                if(!GameDataMgr.Instance.sceneObjectCollisionDialogData[9].HasTriggered)
+                if(dialogList.Count > 9 && !dialogList[9].HasTriggered)
                 {
                     DialogManager.Instance.ShowType2Dialog(E_DialogDataType.SceneObjectCollisionText, 9);
                 }

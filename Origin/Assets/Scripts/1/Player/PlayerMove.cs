@@ -30,6 +30,8 @@ public class PlayerMove : MonoBehaviour
     {
         if(!canMove)
         {
+            move = 0;
+            jump = false;
             return;
         }
         move=Input.GetAxis("Horizontal")*moveSpeed;

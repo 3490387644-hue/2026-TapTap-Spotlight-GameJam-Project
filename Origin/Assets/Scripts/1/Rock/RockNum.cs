@@ -9,12 +9,19 @@ public class RockNum : MonoBehaviour
     public int rockID; //石头的ID
     //是否生成绿藻
     public bool isBornAlgae;
+    //是否生成黑雾
+    public bool isBornFog;
 
     void Start()
     {
         var data = GameDataMgr.Instance.gameData1.rockDataList.Find(r => r.rockID == rockID);
         if (data != null && data.isBreak)
         {
+            // 岩石已打碎：如果会产绿藻且该株绿藻还未被收集，重新生成绿藻
+            if (isBornAlgae && !GameSceneManager.Instance.IsGreenAlgaeCollected(1000 + rockID))
+            {
+                AlgaeBorn.Instance.AlgaeCreate(this.gameObject, 1000 + rockID);
+            }
             Destroy(this.gameObject);   // 已碎，直接不生成
             return;
         }

@@ -72,7 +72,7 @@ public class NPC : MonoBehaviour
             PlayerMove4 player = collider.GetComponent<PlayerMove4>();
             if (player == null) return;
             player.CanGetTorchFromNPC = false; // 玩家进入NPC范围，可以获取火把
-            player.GetNPC.npcID = -1; // 重置当前交互的NPC ID
+            player.GetNPC = null; // 清空玩家当前交互的NPC引用
         }
     }
 

@@ -36,7 +36,7 @@ public class Mechanism : MonoBehaviour
         EventCenter.Instance.RemoveEventListener<bool>(E_EventType.MechanismTrigger, OnMechanismTriggered);
     }
 
-    void OnllisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
@@ -64,6 +64,9 @@ public class Mechanism : MonoBehaviour
         // 执行功能
         isOpen = true; // 设置机关为已打开状态
         // 存储机关是否打开的逻辑
+        MechanismData mechanism = GameSceneManager.Instance.GetMechanismDataList.Find(m => m.mechanismID == mechanismID);
+        if (mechanism != null)
+            mechanism.isOpen = true; // 回写机关打开状态，用于存档
 
         // 播放动画
         animator.SetTrigger("RockMove");

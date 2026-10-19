@@ -18,13 +18,25 @@ public class PathUtil : MonoBehaviour
     /// </summary>
     public static string MusicPathOfChapter1 = "Music/Chapter1/Music/";
     /// <summary>
+    /// 第二章音效路径
+    /// </summary>
+    public static string SoundPathOfChapter2 = "Music/Chapter2/Sound/";
+    /// <summary>
     /// 第二章音乐路径
     /// </summary>
     public static string MusicPathOfChapter2 = "Music/Chapter2/Music/";
     /// <summary>
+    /// 第三章音效路径
+    /// </summary>
+    public static string SoundPathOfChapter3 = "Music/Chapter3/Sound/";
+    /// <summary>
     /// 第三章音乐路径
     /// </summary>
     public static string MusicPathOfChapter3 = "Music/Chapter3/Music/";
+    /// <summary>
+    /// 第四章音效路径
+    /// </summary>
+    public static string SoundPathOfChapter4 = "Music/Chapter4/Sound/";
     /// <summary>
     /// 第四章音乐路径
     /// </summary>

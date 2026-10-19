@@ -47,13 +47,13 @@ public class C1PlayerAudio : MonoBehaviour
     public void OnLandSound()
     {
         Debug.Log("角色落地音效");
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1LandSound, false, true);
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1LandSound, false, false);
     }
 
     public void OnJumpSound()
     {
         // 发出跳跃音效
         Debug.Log("角色跳跃音效");
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.ChapterJumpSound, false, true);
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1JumpSound, false, true);
     }
 }

@@ -36,7 +36,7 @@ public class ResMgr : BaseManager<ResMgr>
         //等待资源加载结束后 才会继续执行yield return后面的代码
         yield return rq;
         //资源加载结束 将资源传到外部的委托函数去进行使用
-        callBack(rq.asset as T);
+        callBack?.Invoke(rq.asset as T);
     }
 
 
@@ -59,7 +59,7 @@ public class ResMgr : BaseManager<ResMgr>
         //等待资源加载结束后 才会继续执行yield return后面的代码
         yield return rq;
         //资源加载结束 将资源传到外部的委托函数去进行使用
-        callBack(rq.asset);
+        callBack?.Invoke(rq.asset);
     }
 
     // 这个是我在做MusicMgr的时候改的，不知道为啥这么改可以去MusicMgr播放音乐的代码看一下
@@ -102,6 +102,6 @@ public class ResMgr : BaseManager<ResMgr>
         AsyncOperation ao = Resources.UnloadUnusedAssets();
         yield return ao;
         //卸载完毕后 通知外部
-        callBack();
+        callBack?.Invoke();
     }
 }

@@ -7,18 +7,24 @@
   },
   {
     "ID": 1,
-    "Text": "我回家了吗？",
+    "Text": "按”ESC“键可以打开游戏面板",
     "Type": 0,
     "HasTriggered": false
   },
   {
     "ID": 2,
-    "Text": "……不对，这是哪里？",
-    "Type": 1,
+    "Text": "我回家了吗？",
+    "Type": 0,
     "HasTriggered": false
   },
   {
     "ID": 3,
+    "Text": "……不对，这是哪里？",
+    "Type": 0,
+    "HasTriggered": false
+  },
+  {
+    "ID": 4,
     "Text": "我回家了吗？哦不怎么还有一对翅膀",
     "Type": 0,
     "HasTriggered": false

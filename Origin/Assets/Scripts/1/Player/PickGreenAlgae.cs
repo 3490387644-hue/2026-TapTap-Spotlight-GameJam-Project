@@ -36,6 +36,10 @@ public class PickGreenAlgae : MonoBehaviour
             GameSceneManager.Instance.UpdatePlayerState(E_PlayerState.Large);
             GameSceneManager.Instance.ChangePlayerScale(E_PlayerState.Large);
         }
+        if (algaeNum == 10)
+        {
+            glow.Instance.isGlow = true;
+        }
     }
 
 

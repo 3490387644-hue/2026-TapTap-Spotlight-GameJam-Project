@@ -23,7 +23,8 @@ public class Torch : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            obj = Physics2D.OverlapCircle(checkPoint.position, radius, mask).gameObject;
+            Collider2D hit = Physics2D.OverlapCircle(checkPoint.position, radius, mask);
+            obj = hit != null ? hit.gameObject : null;
             if(obj != null)
             {
                 Debug.Log("Torch:检测到机关对象，启动机关");

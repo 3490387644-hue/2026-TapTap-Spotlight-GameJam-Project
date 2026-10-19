@@ -128,13 +128,13 @@ public class CharacterController2D4 : MonoBehaviour
     public void OnLandSound()
     {
         Debug.Log("角色落地音效");
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1LandSound, false, false);
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter3FlyLandingSound, false, false);
     }
 
     public void OnJumpSound()
     {
         // 发出跳跃音效
         Debug.Log("角色跳跃音效");
-        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.ChapterJumpSound, false, false);
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter1JumpSound, false, false);
     }
 }

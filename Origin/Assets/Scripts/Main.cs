@@ -9,8 +9,16 @@ public class Main : SingletonAutoMono<Main>
     private Vector2 hotSpot = new Vector2(15, 0); // 鼠标热点位置
     public CursorMode cursorMode = CursorMode.Auto; // 鼠标模式
 
+    private static bool hasInstance = false; // 单例去重标记，防止场景切换产生多个 Main
+
     void Awake()
     {
+        if (hasInstance)
+        {
+            Destroy(this.gameObject); // 已存在 Main 实例时销毁重复的
+            return;
+        }
+        hasInstance = true;
         DontDestroyOnLoad(this.gameObject);
         cursorTex = ResMgr.Instance.Load<Texture2D>("ArtRes/UI/CursorIcon");
         // GameDataMgr.Instance.SaveGameData(new Vector3(0, 0, 0), 1f, 1f, E_SceneType.BeginScene); // 测试用

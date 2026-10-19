@@ -12,6 +12,7 @@ public class GreenAlgae : MonoBehaviour
     private Tweener tween;
 
     private bool isForward; //是否开启自动跟随
+    public int algaeID; //绿藻的唯一标识符，用于存档
 
     private void Start()
     {
@@ -23,8 +24,7 @@ public class GreenAlgae : MonoBehaviour
         if(isForward)
         {
             //如果玩家位置改变则更改目标值，否则不用更改
-            if(lastPlayerPosition==player.transform.position)
-             return;
+            if(lastPlayerPosition==player.transform.position)   return;
             tween.ChangeEndValue(player.transform.position, true).Restart();
             lastPlayerPosition = player.transform.position;
         }
@@ -46,6 +46,7 @@ public class GreenAlgae : MonoBehaviour
             lastPlayerPosition = collision.transform.position;
             isForward = true;
             GameSceneManager.Instance.OnGreenAlgaeCollected(); //通知GameSceneManager绿藻被收集
+            GameSceneManager.Instance.MarkGreenAlgaeCollected(algaeID); //标记该株绿藻已收集，用于存档
             GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.ChapterGreenAlgaeAbsorbSound, false, true); //播放绿藻收集音效
         }
     }

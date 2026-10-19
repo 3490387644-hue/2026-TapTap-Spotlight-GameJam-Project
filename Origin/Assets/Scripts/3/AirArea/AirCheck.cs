@@ -30,4 +30,9 @@ public class AirCheck : MonoBehaviour
             isOnAir = false;
         }
     }
+
+    public void OnAirSound()
+    {
+        GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.Chapter3AirflowSound, false, true);
+    }
 }

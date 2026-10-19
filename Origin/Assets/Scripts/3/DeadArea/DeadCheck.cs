@@ -40,7 +40,7 @@ public class DeadCheck : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         player.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        player.transform.position = CheckpointMgr.Instance.GetCheckPoint().ToVector3();
+        player.GetComponent<Rigidbody2D>().position = CheckpointMgr.Instance.GetCheckPoint().ToVector3();
         // if (player.transform.localScale != CheckpointMgr.Instance.GetCheckPoint().transform.localScale)
         // {
         //     player.gameObject.GetComponent<PlayerMove3>().isFacingRight = !player.gameObject.GetComponent<PlayerMove3>().isFacingRight;

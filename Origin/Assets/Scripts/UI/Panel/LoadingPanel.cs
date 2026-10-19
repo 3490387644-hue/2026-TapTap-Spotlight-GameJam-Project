@@ -110,15 +110,15 @@ public class LoadingPanel : BasePanel
         UIManager.Instance.HidePanel<LoadingPanel>(true, (panel)=>
         {
             Debug.Log("DialogManager");
-            E_SceneType scene = GameSceneManager.Instance.currentSceneType;
-            if(scene == E_SceneType.GameScene01 || scene == E_SceneType.GameScene02 
-            || scene == E_SceneType.GameScene03 || scene == E_SceneType.GameScene04)
-                UIManager.Instance.ShowPanelAsync<QuitPanel>();
-            else
-            {
-                if(UIManager.Instance.GetPanel<QuitPanel>() != null)
-                    UIManager.Instance.HidePanel<QuitPanel>();
-            }
+            // E_SceneType scene = GameSceneManager.Instance.currentSceneType;
+            // if(scene == E_SceneType.GameScene01 || scene == E_SceneType.GameScene02 
+            // || scene == E_SceneType.GameScene03 || scene == E_SceneType.GameScene04)
+            //     UIManager.Instance.ShowPanelAsync<QuitPanel>();
+            // else
+            // {
+            //     if(UIManager.Instance.GetPanel<QuitPanel>() != null)
+            //         UIManager.Instance.HidePanel<QuitPanel>();
+            // }
             callback?.Invoke();
         });
     }
