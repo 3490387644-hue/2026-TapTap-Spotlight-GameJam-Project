@@ -9,7 +9,7 @@ public class Torch : MonoBehaviour
     public Transform checkPoint; //范围检测点
     public float lastTime = 3f; // 启动机关所需时间
     public LayerMask mask; //检测层
-    private float radius = 5f; // 检测半径
+    private float radius = 1f; // 检测半径
     private float timer; // 计时器
     private GameObject obj; //检测到的机关对象
     // Start is called before the first frame update
@@ -43,5 +43,11 @@ public class Torch : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(checkPoint.position, radius);
     }
 }

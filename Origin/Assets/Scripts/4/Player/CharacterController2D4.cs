@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SocialPlatforms;
 
 public class CharacterController2D4 : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class CharacterController2D4 : MonoBehaviour
 
     const float m_NextGroundCheckLag = 1f;    // 起跳后的一小段时间，不能再次起跳。防止连跳的一种解决方案
     float m_NextGroundCheckTime;            // 过了这个时间才可能落地、才能再次起跳
+
 
     // 这个角色控制器，是依靠刚体驱动的
     private Rigidbody2D m_Rigidbody2D;
@@ -44,13 +46,12 @@ public class CharacterController2D4 : MonoBehaviour
             OnAirEvent = new UnityEvent();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         // 保存上一帧的地面状态
         bool wasGrounded = m_Grounded;
         // 先默认这一帧不在地上，后面检测到地面再改true
         m_Grounded = false;
-
         // 检测与地面的碰撞
         if (Time.time > m_NextGroundCheckTime)
         {
@@ -60,6 +61,7 @@ public class CharacterController2D4 : MonoBehaviour
                 // 排除角色自己身上的碰撞体！不要检测到自己
                 if (colliders[i].gameObject != gameObject)
                 {
+                    m_Rigidbody2D.gravityScale = 0;
                     m_Grounded = true;
                     if (!wasGrounded)
                         OnLandEvent.Invoke();
@@ -95,10 +97,12 @@ public class CharacterController2D4 : MonoBehaviour
             //播放移动动画
             if (Mathf.Abs(move) > 0)
             {
+                m_Rigidbody2D.gravityScale = 1;
                 animator.SetBool("isMove", true);
             }
             else
             {
+                //m_Rigidbody2D.velocity=Vector2.zero;
                 animator.SetBool("isMove", false);
             }
         }
@@ -109,7 +113,7 @@ public class CharacterController2D4 : MonoBehaviour
             OnAirEvent.Invoke();
             m_Grounded = false;
             // 施加弹跳力
-            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+            m_Rigidbody2D.AddForce(new Vector2(0f, jumpForce),ForceMode2D.Impulse);
             animator.SetTrigger("isJump");
             m_NextGroundCheckTime = Time.time + m_NextGroundCheckLag;
         }
@@ -136,5 +140,15 @@ public class CharacterController2D4 : MonoBehaviour
         // 发出跳跃音效
         Debug.Log("角色跳跃音效");
         GameSceneManager.Instance.PlaySoundByTriggerType(E_SoundTriggerType.JumpSound, false, false);
+    }
+
+    public void PlayerDrawBefore()
+    {
+        m_Rigidbody2D.gravityScale = 1;
+    }
+
+    public void PlayerDrawAfter()
+    {
+        m_Rigidbody2D.velocity = Vector2.zero;
     }
 }
