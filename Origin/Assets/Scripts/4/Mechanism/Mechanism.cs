@@ -36,16 +36,17 @@ public class Mechanism : MonoBehaviour
         EventCenter.Instance.RemoveEventListener<bool>(E_EventType.MechanismTrigger, OnMechanismTriggered);
     }
 
-    void OnllisionEnter2D(Collision2D collision)
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if(!hasTriggered)
+            if (!hasTriggered)
             {
                 //暂时无法播放 DialogManager.Instance.ShowDialogPanel(E_DialogFuncType.Type2, 0, dialogText);
                 EventCenter.Instance.EventTrigger<bool>(E_EventType.MechanismTrigger, true); // 通知所有监听者机关触发事件
             }
-        }   
+        }
     }
 
     private void Init(Mechanism mechanism)
